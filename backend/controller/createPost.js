@@ -1,11 +1,11 @@
 const PostModel = require('../model/postModel');
 
 exports.createPost = async (req, res, next) => {
-    const { title, content, imgSrc, commentText } = req.body;
+    const { title, content, imgSrc, commentText, tag, author } = req.body;
 
     try {
         // Create a new post
-        const newPost = new PostModel({ title, content, imgSrc });
+        const newPost = new PostModel({ title, content, author, tag, imgSrc, comments: [] });
 
         // Add the initial comment to the new post
         newPost.comments.push({ text: commentText });

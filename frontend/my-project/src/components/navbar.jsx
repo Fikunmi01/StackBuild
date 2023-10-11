@@ -19,16 +19,19 @@ export const Navbar = () => {
         </div>
 
         <div className="flex">
-          <input
-            type="search"
-            className="border-2 border-solid border-black z-10"
-            name=""
-            id=""
-            onClick={handleClick}
-          />
-            <img src="/assets/searchIcon.png" alt="" />
+          {search ? (
+            <input
+              type="search"
+              className="outline-none border-2 border-solid z-10"
+              name=""
+              id=""
+             
+            />
+          ) : (
+            <img  onClick={handleClick} src="/assets/searchIcon.png" alt="" />
+          )}
         </div>
       </div>
     </>
   );
-};c
+};

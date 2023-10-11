@@ -1,15 +1,16 @@
 import React from "react";
-import { Navbar } from "./components/navbar";
-import { Hero } from "./components/hero";
-import { Editor } from "./components/editor";
+import { Homepage } from "./pages/homepage";
+import { Route, Routes } from "react-router-dom";
+import { SinglePost } from "./pages/singlepage";
 
 function App() {
   return (
-      <div>
-        <Navbar/>
-        <Hero/>
-        <Editor/>
-      </div>
+    <div>
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/post/:postId" element={<SinglePost />} />
+      </Routes>
+    </div>
   );
 }
 

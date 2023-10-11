@@ -1,12 +1,12 @@
-const PostModel = require('../model/postModel');
+const PostModel = require('../model/postModel')
 
 exports.updatePost = async (req, res, next) => {
-    const { postId, title, content, imgSrc } = req.body;
-
+    const { title, content, imgSrc } = req.body;
+    const postId = req.params.postId.toString(); // Access postId from req.params
+    
     try {
         // Find the post by postId
-        const post = await PostModel.findById(postId);
-
+        const post = await PostModel.findOne({ postId: postId });
         if (!post) {
             return res.status(404).json({ error: 'Post not found' });
         }
