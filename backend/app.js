@@ -10,6 +10,7 @@ const cors = require('cors');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var postsRouter = require('./routes/post');
+var searchRouter = require('.//routes/search')
 
 var app = express();
 

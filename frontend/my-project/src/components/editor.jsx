@@ -53,11 +53,11 @@ export const Editor = () => {
                     </p>
                   </div>
 
-                  <p className="text-base font-sans font-normal text-[#000]">
+                  <p className="text-base pb-2 font-sans font-normal text-[#000]">
                     {post.content}
                   </p>
 
-                  <Link key={post.postId} to={`/post/${post.postId}`}>
+                  <Link className="font-serif border-solid border-[#00] border-b-2" key={post.postId} to={`/post/${post.postId}`}>
                     Read more
                   </Link>
                 </div>
@@ -119,13 +119,17 @@ export const Editor = () => {
                     </p>
                     <img src="/assets/Ellipse1.png" alt="" />
                     <p className="text-base font-sans text-lightGray">
-                      {item.date}
+                      {item.createdAt }
                     </p>
                   </div>
 
                   <p className="text-base font-sans font-normal text-[#000]">
                     {item.description}
                   </p>
+
+                  <Link className="font-serif border-solid border-[#00] border-b-2" key={item.postId} to={`/post/${item.postId}`}>
+                    Read more
+                  </Link>
                 </div>
               </div>
 

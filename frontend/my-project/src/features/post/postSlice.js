@@ -37,7 +37,6 @@ export const deletePost = (postId) => createAsyncThunk('post/delete-post', () =>
 });
 
 
-
 const postSlice = createSlice({
     name: 'Posts',
     initialState,
@@ -55,8 +54,8 @@ const postSlice = createSlice({
                 state.loading = false;
                 state.post = [];
                 state.error = action.error.message;
-            })
-           
+            });
+    
     },
 });
 
