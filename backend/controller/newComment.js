@@ -1,5 +1,3 @@
-const express = require('express');
-const router = express.Router();
 const PostModel = require('../model/postModel'); // Import your Post model
 
 // Define a route to post a new comment to a specific post
@@ -9,10 +7,14 @@ exports.newComment = async (req, res, next) => {
         const postId = req.params.postId;
 
         // Find the post by its postId
-        const post = await PostModel.find({ postId: postId });
+        const post = await PostModel.findOne({ postId: postId });
 
         if (!post) {
             return res.status(404).json({ error: 'No comments found' });
+        }
+
+        if (!post.comments) {
+            post.comments = []
         }
 
         // Add the new comment to the post's comments array

@@ -7,15 +7,16 @@ const initialState = {
     error: '',
 };
 
-export const postComment = createAsyncThunk("post/postComment", async (commentData) => {
+export const postComment = createAsyncThunk("post/postComment", async ({ text, postId }, { rejectWithValue }) => {
     try {
-        const { postId, comment } = commentData;
-        const response = await axios.post(`http://localhost:5000/post/${postId}/comment`, { text: comment });
+        const response = await axios.post(`http://localhost:5000/post/${postId}/comment`, { text, postId });
         return response.data;
     } catch (error) {
-        throw error;
+        return rejectWithValue(error.message);
     }
+
 });
+
 
 
 const commentSlice = createSlice({

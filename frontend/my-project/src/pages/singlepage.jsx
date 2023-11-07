@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchSingle } from "../features/post/singleSlice";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Navbar } from "../components/navbar";
 import { Footer } from "../components/footer";
 import { postComment } from "../features/post/commentSlice";
@@ -12,8 +12,10 @@ export const SinglePost = () => {
   const { postId } = useParams();
   const [comment, setComment] = useState("");
   const user = useSelector((state) => state.user);
-  const commentArray = useSelector((state) => state.comment);
-  
+  // const commentArray = useSelector((state) => state.comment);
+  const commentArray = Object.values(
+    useSelector((state) => state.comment.comment)
+  );
 
   useEffect(() => {
     // Fetch the individual post data when the component mounts
@@ -21,16 +23,19 @@ export const SinglePost = () => {
   }, [postId]);
 
   const handleComment = (e) => {
-    // e.preventDefault();
-    if (setComment.trim() !== "") {
-      dispatch(postComment(setComment));
+    e.preventDefault();
+
+    if (comment.trim() !== "") {
+      dispatch(postComment({ text: comment, postId }));
+      dispatch(fetchSingle(postId));
+      setComment("");
     }
   };
 
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-
-  // const day=post.createdAt
-
+  // if (commentArray.length === 0) {
+  //   return <p>Theres's no comment available</p>;
+  // }
   return (
     <>
       <div>
@@ -75,10 +80,14 @@ export const SinglePost = () => {
                 </button>
               </div>
             )}
-{/* 
-            {commentArray.map((item)=> {
-              <p>{item.text}</p>
-            })} */}
+
+            {item.comments && item.comments.length > 0 ? (
+              item.comments.map((comment, index) => (
+                <p key={index}>{comment.text}</p>
+              ))
+            ) : (
+              <p>There's no comment available</p>
+            )}
 
             <Footer />
           </>

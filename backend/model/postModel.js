@@ -5,16 +5,20 @@ const postSchema = mongoose.Schema({
     title: String,
     content: String,
     imgSrc: String,
-    author:String,
-    tag:String,
+    author: String,
+    tag: String,
     comments: [
         {
-            text: String
+            text: String,
+            createdAt: {
+                type: Date,
+                default: new Date(),
+            },
         }
     ],
     createdAt: {
         type: Date,
-        default: new Date().setDate(),
+        default: new Date(),
     }
 })
 
