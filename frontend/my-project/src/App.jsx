@@ -3,6 +3,9 @@ import { Homepage } from "./pages/homepage";
 import { Route, Routes } from "react-router-dom";
 import { SinglePost } from "./pages/singlepage";
 import { Search } from "./components/searchedPage";
+import { Login } from "./pages/login";
+import { Welcome } from "./pages/welcome";
+import { CreateAcc } from "./pages/createAcc";
 
 function App() {
   return (
@@ -10,7 +13,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/post/:postId" element={<SinglePost />} />
-        <Route path="/search/:q" element={<Search />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/user/login" element={<Login />} />
+        <Route path="/user/login/:username" element={<Homepage />} />
+        <Route path="/user/create-account" element={<CreateAcc />} />
+        <Route path="/welcome" element={<Welcome/>}/>
       </Routes>
     </div>
   );

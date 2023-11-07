@@ -5,7 +5,6 @@ const { deletePost } = require('../controller/deletePost');
 const { getPosts } = require('../controller/fetchPost');
 const { getSinglePost } = require('../controller/fetchSingle');
 const { newComment } = require('../controller/newComment');
-const { searchPost } = require('../controller/searchPost');
 var router = express.Router();
 
 /* GET post listing. */

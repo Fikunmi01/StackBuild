@@ -11,6 +11,7 @@ const initialState = {
 export const searchPost = createAsyncThunk('search/', async (q) => {
     try {
         const response = await axios.get(`http://localhost:5000/search?q=${q}`);
+        console.log(response.data)
         return response.data;
     } catch (error) {
         throw error;
@@ -18,7 +19,7 @@ export const searchPost = createAsyncThunk('search/', async (q) => {
 });
 
 const searchSlice = createSlice({
-    name: 'searched item',
+    name: 'search',
     initialState,
     reducers: {},
     extraReducers: (builder) => {

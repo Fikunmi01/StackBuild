@@ -35,7 +35,7 @@ const commentSlice = createSlice({
             .addCase(postComment.rejected, (state, action) => {
                 state.loading = false;
                 state.comment = {};
-                state.error = action.payload;
+                state.error = action.error.message;
             });
     },
 });

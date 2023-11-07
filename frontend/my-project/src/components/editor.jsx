@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchPosts } from "../features/post/postSlice";
 import { Link, useParams } from "react-router-dom";
 import { fetchSingle } from "../features/post/singleSlice";
+import { Footer } from "./footer";
 
 export const Editor = () => {
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ export const Editor = () => {
 
   return (
     <>
-      <div className="pt-16">
+      <div className="pt-16 relative">
         <div className="flex items-center gap-y-4 flex-col relative">
           <h1 className="font-sans  text-5xl text-center font-bold">
             Editor's pick
@@ -31,7 +32,7 @@ export const Editor = () => {
         {posts.post.slice(0, 3).map((post) => {
           return (
             <>
-              <div className="flex items-center justify-center px-72 py-16 gap-10">
+              <div className="flex items-center justify-center px-72 py-16 gap-10 relative">
                 <div>
                   <img src={post.imgSrc} alt="" />
                 </div>
@@ -57,7 +58,11 @@ export const Editor = () => {
                     {post.content}
                   </p>
 
-                  <Link className="font-serif border-solid border-[#00] border-b-2" key={post.postId} to={`/post/${post.postId}`}>
+                  <Link
+                    className="font-serif border-solid border-[#00] border-b-2"
+                    key={post.postId}
+                    to={`/post/${post.postId}`}
+                  >
                     Read more
                   </Link>
                 </div>
@@ -96,7 +101,7 @@ export const Editor = () => {
         {posts.post.slice(3, 7).map((item, index) => {
           const startIndex = posts.post.length;
           return (
-            <div>
+            <div className="relative">
               <div
                 key={index + startIndex}
                 className="flex relative items-center justify-center px-48 py-16 gap-10 top-[40rem] "
@@ -106,7 +111,7 @@ export const Editor = () => {
                 </div>
 
                 <div className="w-full">
-                  <h2 className="text-xl text-lightGray lead  font-sans">
+                  <h2 className="text-xl text-lightGray lead font-sans">
                     {item.tag}
                   </h2>
                   <h1 className="text-3xl font-serif font-bold pb-2">
@@ -119,7 +124,7 @@ export const Editor = () => {
                     </p>
                     <img src="/assets/Ellipse1.png" alt="" />
                     <p className="text-base font-sans text-lightGray">
-                      {item.createdAt }
+                      {item.createdAt}
                     </p>
                   </div>
 
@@ -127,7 +132,11 @@ export const Editor = () => {
                     {item.description}
                   </p>
 
-                  <Link className="font-serif border-solid border-[#00] border-b-2" key={item.postId} to={`/post/${item.postId}`}>
+                  <Link
+                    className="font-serif border-solid border-[#00] border-b-2"
+                    key={item.postId}
+                    to={`/post/${item.postId}`}
+                  >
                     Read more
                   </Link>
                 </div>
@@ -138,6 +147,7 @@ export const Editor = () => {
           );
         })}
       </div>
+
     </>
   );
 };

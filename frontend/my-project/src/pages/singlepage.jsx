@@ -1,32 +1,46 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchSingle } from "../features/post/singleSlice";
 import { useParams } from "react-router-dom";
 import { Navbar } from "../components/navbar";
+import { Footer } from "../components/footer";
+import { postComment } from "../features/post/commentSlice";
 
 export const SinglePost = () => {
   const dispatch = useDispatch();
   const post = useSelector((state) => state.singlePost);
   const { postId } = useParams();
+  const [comment, setComment] = useState("");
+  const user = useSelector((state) => state.user);
+  const commentArray = useSelector((state) => state.comment);
+  
+
   useEffect(() => {
     // Fetch the individual post data when the component mounts
     dispatch(fetchSingle(postId));
   }, [postId]);
 
+  const handleComment = (e) => {
+    // e.preventDefault();
+    if (setComment.trim() !== "") {
+      dispatch(postComment(setComment));
+    }
+  };
+
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
   // const day=post.createdAt
 
-  // const day = post.singlePost[0].createdAt.slice(0, 10);
   return (
     <>
       <div>
-        
         {post.singlePost.map((item, index) => (
           <>
             <Navbar />
 
             <div
               key={index}
-              className="px-4 w-full items-center flex justify-centerh-1/2 flex-col mb-20"
+              className="px-4 w-full items-center flex justify-centerh-1/2 flex-col "
             >
               {/* {console.log(item.comments)} */}
               <img src={item.imgSrc} alt="" className="w-[100vh] mb-10" />
@@ -45,6 +59,28 @@ export const SinglePost = () => {
 
               <p className="px-80  font-sans leading-normal">{item.content}</p>
             </div>
+
+            {isAuthenticated && (
+              <div>
+                <label htmlFor="comment">Enter comment</label>
+                <input
+                  type="text"
+                  name=""
+                  onChange={(e) => setComment(e.target.value)}
+                  id=""
+                  className="border-2"
+                />
+                <button type="submit" onClick={handleComment}>
+                  submit
+                </button>
+              </div>
+            )}
+{/* 
+            {commentArray.map((item)=> {
+              <p>{item.text}</p>
+            })} */}
+
+            <Footer />
           </>
         ))}
       </div>

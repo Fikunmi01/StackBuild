@@ -8,7 +8,7 @@ export default {
     extend: {
       fontFamily: {
         sans: [`'Open Sans', sans-serif`],
-        serif: [`'Libre Baskerville', serif`],
+        serif: [`'Libre Baskerville', serif`]
       },
       colors: {
         lightGray: 'rgba(28, 28, 28, 0.50)',
