@@ -82,7 +82,14 @@ export const SinglePost = () => {
                   <div className="font-sans">
                     <p>There's no comment available</p>
                     <p>
-                      <Link to="/user/login" className="border-b-2">Login</Link> to write a comment
+                      {!isAuthenticated && (
+                        <>
+                          <Link to="/user/login" className="border-b-2">
+                            Login
+                          </Link>{" "}
+                          to write a comment
+                        </>
+                      )}
                     </p>
                   </div>
                 ) : (
