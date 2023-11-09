@@ -14,7 +14,7 @@ exports.newComment = async (req, res, next) => {
         }
 
         if (!post.comments) {
-            post.comments = []
+            post.comments = {}
         }
 
         // Add the new comment to the post's comments array

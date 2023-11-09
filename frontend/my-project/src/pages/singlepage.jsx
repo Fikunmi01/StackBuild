@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchSingle } from "../features/post/singleSlice";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Navbar } from "../components/navbar";
 import { Footer } from "../components/footer";
 import { postComment } from "../features/post/commentSlice";
+import TextEditor from "../components/textEditor";
 
 export const SinglePost = () => {
   const dispatch = useDispatch();
@@ -20,11 +21,12 @@ export const SinglePost = () => {
   useEffect(() => {
     // Fetch the individual post data when the component mounts
     dispatch(fetchSingle(postId));
-  }, [postId]);
+    if (postComment === "fulfilled") {
+      dispatch(fetchSingle(postId));
+    }
+  }, [postId, postComment]);
 
-  const handleComment = (e) => {
-    e.preventDefault();
-
+  const handleComment = (comment) => {
     if (comment.trim() !== "") {
       dispatch(postComment({ text: comment, postId }));
       dispatch(fetchSingle(postId));
@@ -33,9 +35,7 @@ export const SinglePost = () => {
   };
 
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-  // if (commentArray.length === 0) {
-  //   return <p>Theres's no comment available</p>;
-  // }
+
   return (
     <>
       <div>
@@ -45,9 +45,8 @@ export const SinglePost = () => {
 
             <div
               key={index}
-              className="px-4 w-full items-center flex justify-centerh-1/2 flex-col "
+              className="px-4 w-full items-center flex justify-center flex-col "
             >
-              {/* {console.log(item.comments)} */}
               <img src={item.imgSrc} alt="" className="w-[100vh] mb-10" />
               <h2 className="font-serif text-3xl w-2/4 text-center leading-normal mx-auto font-bold">
                 {item.title}
@@ -55,39 +54,46 @@ export const SinglePost = () => {
               <span className="flex text-lightGray text-xl gap-4 items-center mb-4">
                 <p>{item.author}</p>
                 <img src="/assets/Ellipse1.png" alt="" />
-                {/* <p>{day}</p> */}
               </span>
 
               <p className="text-lightGray mb-4 font-sans">
                 #technology #tech #career
               </p>
 
-              <p className="px-80  font-sans leading-normal">{item.content}</p>
+              <p className="px-80 font-sans leading-normal">{item.content}</p>
             </div>
 
             {isAuthenticated && (
+              <>
+                <div className="pt-16 flex flex-col gap-y-4">
+                  <TextEditor
+                    setComment={setComment}
+                    handleComment={handleComment}
+                    comment={comment}
+                  />
+                </div>
+              </>
+            )}
+            <div className="mx-80 relative m-auto px-4 flex flex-col gap-20 py-16">
               <div>
-                <label htmlFor="comment">Enter comment</label>
-                <input
-                  type="text"
-                  name=""
-                  onChange={(e) => setComment(e.target.value)}
-                  id=""
-                  className="border-2"
-                />
-                <button type="submit" onClick={handleComment}>
-                  submit
-                </button>
-              </div>
-            )}
+                <h1 className="font-serif text-2xl">Comments</h1>
 
-            {item.comments && item.comments.length > 0 ? (
-              item.comments.map((comment, index) => (
-                <p key={index}>{comment.text}</p>
-              ))
-            ) : (
-              <p>There's no comment available</p>
-            )}
+                {!Object.keys(item.comments).length > 0 ? (
+                  <div className="font-sans">
+                    <p>There's no comment available</p>
+                    <p>
+                      <Link to="/user/login" className="border-b-2">Login</Link> to write a comment
+                    </p>
+                  </div>
+                ) : (
+                  Object.values(item.comments).map((comment, index) => (
+                    <p key={index} className="">
+                      {comment.text}
+                    </p>
+                  ))
+                )}
+              </div>
+            </div>
 
             <Footer />
           </>

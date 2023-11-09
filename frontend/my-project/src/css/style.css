@@ -558,14 +558,6 @@ video {
   top: 9rem;
 }
 
-.top-96 {
-  top: 24rem;
-}
-
-.top-\[40rem\] {
-  top: 40rem;
-}
-
 .z-10 {
   z-index: 10;
 }
@@ -584,6 +576,11 @@ video {
   margin-right: 1rem;
 }
 
+.mx-80 {
+  margin-left: 20rem;
+  margin-right: 20rem;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -593,20 +590,28 @@ video {
   margin-bottom: 2.5rem;
 }
 
-.mb-20 {
-  margin-bottom: 5rem;
-}
-
 .mb-4 {
   margin-bottom: 1rem;
+}
+
+.mb-60 {
+  margin-bottom: 15rem;
 }
 
 .mt-20 {
   margin-top: 5rem;
 }
 
-.mt-96 {
-  margin-top: 24rem;
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
+.mt-10 {
+  margin-top: 2.5rem;
+}
+
+.mt-6 {
+  margin-top: 1.5rem;
 }
 
 .flex {
@@ -621,12 +626,20 @@ video {
   height: 18rem;
 }
 
+.h-96 {
+  height: 24rem;
+}
+
 .w-1\/2 {
   width: 50%;
 }
 
 .w-2\/4 {
   width: 50%;
+}
+
+.w-2\/5 {
+  width: 40%;
 }
 
 .w-3\/5 {
@@ -653,32 +666,16 @@ video {
   width: 100%;
 }
 
-.w-2 {
-  width: 0.5rem;
-}
-
-.w-2\/3 {
-  width: 66.666667%;
-}
-
-.w-1\/4 {
-  width: 25%;
+.w-10 {
+  width: 2.5rem;
 }
 
 .w-96 {
   width: 24rem;
 }
 
-.w-48 {
-  width: 12rem;
-}
-
-.w-9 {
-  width: 2.25rem;
-}
-
-.w-2\/5 {
-  width: 40%;
+.w-24 {
+  width: 6rem;
 }
 
 .cursor-pointer {
@@ -707,6 +704,10 @@ video {
 
 .gap-2 {
   gap: 0.5rem;
+}
+
+.gap-20 {
+  gap: 5rem;
 }
 
 .gap-4 {
@@ -741,6 +742,10 @@ video {
   border-radius: 0.75rem;
 }
 
+.rounded {
+  border-radius: 0.25rem;
+}
+
 .border-2 {
   border-width: 2px;
 }
@@ -766,6 +771,11 @@ video {
   border-color: rgb(0 0 0 / var(--tw-border-opacity));
 }
 
+.border-\[\#ccc\] {
+  --tw-border-opacity: 1;
+  border-color: rgb(204 204 204 / var(--tw-border-opacity));
+}
+
 .bg-\[\#F8F8F8\] {
   --tw-bg-opacity: 1;
   background-color: rgb(248 248 248 / var(--tw-bg-opacity));
@@ -781,17 +791,18 @@ video {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.bg-transparent {
-  background-color: transparent;
-}
-
 .object-contain {
   -o-object-fit: contain;
      object-fit: contain;
 }
 
-.p-10 {
-  padding: 2.5rem;
+.p-16 {
+  padding: 4rem;
+}
+
+.px-10 {
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
 }
 
 .px-16 {
@@ -839,14 +850,18 @@ video {
   padding-bottom: 0.75rem;
 }
 
-.px-10 {
-  padding-left: 2.5rem;
-  padding-right: 2.5rem;
+.py-6 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
 }
 
-.py-10 {
-  padding-top: 2.5rem;
-  padding-bottom: 2.5rem;
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.pb-16 {
+  padding-bottom: 4rem;
 }
 
 .pb-2 {
@@ -942,6 +957,10 @@ video {
 
 .font-normal {
   font-weight: 400;
+}
+
+.italic {
+  font-style: italic;
 }
 
 .leading-normal {

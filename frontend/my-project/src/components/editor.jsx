@@ -71,7 +71,7 @@ export const Editor = () => {
           );
         })}
 
-        <div className="relative px-4">
+        <div className="relative px-4 h-96 mb-60">
           <div className="absolute w-[38rem] bg-white right-16 py-20 px-16 z-10">
             <h2 className="text-xl font-sans pb-2 text-lightGray">INTERIOR</h2>
             <h1 className="font-serif text-4xl pb-2 font-bold leading-tight">
@@ -104,7 +104,7 @@ export const Editor = () => {
             <div className="relative">
               <div
                 key={index + startIndex}
-                className="flex relative items-center justify-center px-48 py-16 gap-10 top-[40rem] "
+                className="flex relative items-center justify-center px-48 py-16 gap-10"
               >
                 <div>
                   <img src={item.imgSrc} alt="" />

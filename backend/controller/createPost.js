@@ -5,7 +5,7 @@ exports.createPost = async (req, res, next) => {
 
     try {
         // Create a new post
-        const newPost = new PostModel({ title, content, author, tag, imgSrc, comments: [] });
+        const newPost = new PostModel({ title, content, author, tag, imgSrc, comments: {} });
 
         // Add the initial comment to the new post
         newPost.comments.push({ text: commentText });

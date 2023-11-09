@@ -7,15 +7,14 @@ const postSchema = mongoose.Schema({
     imgSrc: String,
     author: String,
     tag: String,
-    comments: [
-        {
-            text: String,
-            createdAt: {
-                type: Date,
-                default: new Date(),
-            },
-        }
-    ],
+    comments: [{
+        text: String,
+        createdAt: {
+            type: Date,
+            default: new Date(),
+        },
+    }],
+
     createdAt: {
         type: Date,
         default: new Date(),
