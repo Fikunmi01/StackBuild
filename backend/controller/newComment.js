@@ -5,6 +5,7 @@ exports.newComment = async (req, res, next) => {
     try {
         const { text } = req.body;
         const postId = req.params.postId;
+        const username = req.user.username;
 
         // Find the post by its postId
         const post = await PostModel.findOne({ postId: postId });
@@ -18,7 +19,7 @@ exports.newComment = async (req, res, next) => {
         }
 
         // Add the new comment to the post's comments array
-        post.comments.push({ text });
+        post.comments.push({ text,username });
 
         // Save the updated post document
         await post.save();

@@ -12,23 +12,24 @@ export const SinglePost = () => {
   const post = useSelector((state) => state.singlePost);
   const { postId } = useParams();
   const [comment, setComment] = useState("");
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.user);
   // const commentArray = useSelector((state) => state.comment);
   const commentArray = Object.values(
     useSelector((state) => state.comment.comment)
   );
 
+  console.log(user.username);
   useEffect(() => {
     // Fetch the individual post data when the component mounts
     dispatch(fetchSingle(postId));
     if (postComment === "fulfilled") {
       dispatch(fetchSingle(postId));
     }
-  }, [postId, postComment]);
+  }, [postId]);
 
-  const handleComment = (comment) => {
+  const handleComment = async (comment) => {
     if (comment.trim() !== "") {
-      dispatch(postComment({ text: comment, postId }));
+      await dispatch(postComment({ text: comment, postId }));
       dispatch(fetchSingle(postId));
       setComment("");
     }
@@ -94,9 +95,12 @@ export const SinglePost = () => {
                   </div>
                 ) : (
                   Object.values(item.comments).map((comment, index) => (
-                    <p key={index} className="">
-                      {comment.text}
-                    </p>
+                    <div>
+                      <p>{user.username}</p>
+                      <p key={index} className="">
+                        {comment.text}
+                      </p>
+                    </div>
                   ))
                 )}
               </div>

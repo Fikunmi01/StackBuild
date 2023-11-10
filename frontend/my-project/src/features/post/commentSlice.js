@@ -7,9 +7,9 @@ const initialState = {
     error: '',
 };
 
-export const postComment = createAsyncThunk("post/postComment", async ({ text, postId }, { rejectWithValue }) => {
+export const postComment = createAsyncThunk("post/postComment", async ({ text, postId, username }, { rejectWithValue }) => {
     try {
-        const response = await axios.post(`http://localhost:5000/post/${postId}/comment`, { text, postId });
+        const response = await axios.post(`http://localhost:5000/post/${postId}/comment`, { text, postId, username });
         return response.data;
     } catch (error) {
         return rejectWithValue(error.message);
