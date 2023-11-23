@@ -1,7 +1,7 @@
 const UserModel = require('../model/userModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const SECRET_KEY = 'ASA';
+require('dotenv').config();
 
 exports.createUser = async (req, res, next) => {
     const { email, password, firstName, lastName, username } = req.body;
@@ -26,7 +26,7 @@ exports.createUser = async (req, res, next) => {
 
             const userPayload = newUser.toObject();
 
-            const token = jwt.sign(userPayload, SECRET_KEY);
+            const token = jwt.sign(userPayload, process.env.SECRET_KEY);
             newUser.token = token
             await newUser.save();
             console.log("User successfully created");

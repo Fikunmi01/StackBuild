@@ -9,7 +9,10 @@ const initialState = {
 
 export const postComment = createAsyncThunk("post/postComment", async ({ text, postId, username }, { rejectWithValue }) => {
     try {
-        const response = await axios.post(`http://localhost:5000/post/${postId}/comment`, { text, postId, username });
+        const token = localStorage.getItem('token')
+        const response = await axios.post(`http://localhost:5000/post/${postId}/comment`, { text, postId, username }, {
+            headers: { 'x-auth-token': token }
+        });
         return response.data;
     } catch (error) {
         return rejectWithValue(error.message);

@@ -7,12 +7,15 @@ const initialState = {
     error: '',
 };
 
-export const fetchSingle = createAsyncThunk('single/fetchSingle', async (postId) => {
+export const fetchSingle = createAsyncThunk('post/fetchSingle', async (postId, { rejectWithValue }) => {
     try {
-        const response = await axios.get(`http://localhost:5000/post/${postId}`);
-        // console.log(`the post id is${postId}`)
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`http://localhost:5000/post/${postId}`, {
+            headers: { 'x-auth-token': token }
+        });
         return response.data;
     } catch (error) {
+        return rejectWithValue(error.message);
     }
 });
 

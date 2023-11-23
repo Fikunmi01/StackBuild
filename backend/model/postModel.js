@@ -9,6 +9,7 @@ const postSchema = mongoose.Schema({
     tag: String,
     comments: [{
         text: String,
+        username: String,
         createdAt: {
             type: Date,
             default: new Date(),

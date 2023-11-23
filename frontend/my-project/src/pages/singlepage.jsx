@@ -12,26 +12,25 @@ export const SinglePost = () => {
   const post = useSelector((state) => state.singlePost);
   const { postId } = useParams();
   const [comment, setComment] = useState("");
-  const user = useSelector((state) => state.user.user);
+  const user = useSelector((state) => state.user);
   // const commentArray = useSelector((state) => state.comment);
   const commentArray = Object.values(
     useSelector((state) => state.comment.comment)
   );
 
-  console.log(user.username);
   useEffect(() => {
     // Fetch the individual post data when the component mounts
     dispatch(fetchSingle(postId));
-    if (postComment === "fulfilled") {
+    if (postComment.fulfilled) {
       dispatch(fetchSingle(postId));
     }
   }, [postId]);
 
-  const handleComment = async (comment) => {
+  const handleComment = (comment) => {
     if (comment.trim() !== "") {
-      await dispatch(postComment({ text: comment, postId }));
-      dispatch(fetchSingle(postId));
+      dispatch(postComment({ text: comment, postId }));
       setComment("");
+      dispatch(fetchSingle(postId));
     }
   };
 
@@ -95,11 +94,11 @@ export const SinglePost = () => {
                   </div>
                 ) : (
                   Object.values(item.comments).map((comment, index) => (
-                    <div>
-                      <p>{user.username}</p>
+                    <div className="bg-red-900">
                       <p key={index} className="">
                         {comment.text}
                       </p>
+                      <p>{comment.username}</p>
                     </div>
                   ))
                 )}

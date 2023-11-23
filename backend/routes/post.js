@@ -6,18 +6,37 @@ const { getPosts } = require('../controller/fetchPost');
 const { getSinglePost } = require('../controller/fetchSingle');
 const { newComment } = require('../controller/newComment');
 var router = express.Router();
+const jwt = require('jsonwebtoken');
+
+function auth(req, res, next) {
+    const token = req.header('x-auth-token');
+    console.log('Token:', token); // Log the token
+    if (!token) return res.status(401).send('Access denied. No token provided.');
+
+
+    try {
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        console.log('Decoded:', decoded); // Log the decoded object
+        req.user = decoded;
+
+        next();
+    } catch (ex) {
+        res.status(400).send('Invalid token.');
+    }
+
+
+}
 
 /* GET post listing. */
-router.get('/', getPosts, function (req, res, next) {
-    res.send('fetch all posts');
-});
-// router.post('/search', searchPost);
 router.get('/', getPosts);
+
 router.get('/:postId', getSinglePost);
-router.post('/:postId/comment', newComment);
-router.post('/create-post', createPost);
-router.put('/update-post/:postId', updatePost);
-router.delete('/delete-post/:postId', deletePost);
+router.post('/:postId/comment', auth, newComment);
+router.post('/create-post', auth, createPost);
+
+router.put('/update-post/:postId', auth, updatePost);
+router.delete('/delete-post/:postId', auth, deletePost);
+
 
 
 module.exports = router;
