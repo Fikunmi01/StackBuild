@@ -94,7 +94,7 @@ export const SinglePost = () => {
                   </div>
                 ) : (
                   Object.values(item.comments).map((comment, index) => (
-                    <div className="bg-red-900">
+                    <div className="">
                       <p key={index} className="">
                         {comment.text}
                       </p>
