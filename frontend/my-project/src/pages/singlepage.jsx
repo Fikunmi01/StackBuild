@@ -6,17 +6,22 @@ import { Navbar } from "../components/navbar";
 import { Footer } from "../components/footer";
 import { postComment } from "../features/post/commentSlice";
 import TextEditor from "../components/textEditor";
+import { likeComment, quoteComment } from "../features/post/commentSlice";
 
 export const SinglePost = () => {
   const dispatch = useDispatch();
   const post = useSelector((state) => state.singlePost);
   const { postId } = useParams();
   const [comment, setComment] = useState("");
+  const [quote, setQuote] = useState("");
+  const [quoteBox, setQuoteBox] = useState(false);
+  const [quoteBoxCommentId, setQuoteBoxCommentId] = useState(""); // This is the commentId of the comment that is being quoted
   const user = useSelector((state) => state.user);
-  // const commentArray = useSelector((state) => state.comment);
   const commentArray = Object.values(
     useSelector((state) => state.comment.comment)
   );
+  const isLiked =
+    comment && comment.likes ? comment.likes.includes(user._id) : false;
 
   useEffect(() => {
     // Fetch the individual post data when the component mounts
@@ -24,7 +29,7 @@ export const SinglePost = () => {
     if (postComment.fulfilled) {
       dispatch(fetchSingle(postId));
     }
-  }, [postId]);
+  }, [postId, comment.likes]);
 
   const handleComment = (comment) => {
     if (comment.trim() !== "") {
@@ -32,6 +37,10 @@ export const SinglePost = () => {
       setComment("");
       dispatch(fetchSingle(postId));
     }
+  };
+
+  const toggleQuoteBox = () => {
+    setQuoteBox(!quoteBox);
   };
 
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
@@ -94,11 +103,98 @@ export const SinglePost = () => {
                   </div>
                 ) : (
                   Object.values(item.comments).map((comment, index) => (
-                    <div className="">
-                      <p key={index} className="">
-                        {comment.text}
+                    // const isLiked = comment.likes
+                    //   ? comment.likes.includes(user._id)
+                    //   : false;
+
+                    <div className="mb-4 px-3 border-2 rounded-md font-sans py-2">
+                      <p className="font-black mb-1 font-serif text-xs italic">
+                        {comment.username}
                       </p>
-                      <p>{comment.username}</p>
+
+                      <div className="">
+                        <p key={index} className="mb-2">
+                          {comment.text}
+                        </p>
+                      </div>
+
+                      {comment.quotes &&
+                        comment.quotes.map((quote, quoteIndex) => (
+                          <div
+                            key={quoteIndex}
+                            className="pl-4 border-l-2 mb-4 mx-auto"
+                          >
+                            <p className="font-black mb-1 font-serif text-xs italic">
+                              {quote.username}
+                            </p>
+                            <p>{quote.quote}</p>
+                          </div>
+                        ))}
+
+                      <div className="flex items-center gap-4 text-2xl">
+                        <div>
+                          <img
+                            src="/assets/heart (1).png"
+                            alt=""
+                            className="uil uil-thumbs-up cursor-pointer"
+                            onClick={() =>
+                              dispatch(
+                                likeComment({
+                                  postId,
+                                  commentId: comment._id,
+                                })
+                              )
+                            }
+                          />
+
+                          {console.log("isLiked", isLiked)}
+                          {isLiked ? "liked" : "unlike"}
+                          <p className="text-base">
+                            {comment.likes.length} likes
+                          </p>
+                          <i
+                            className="uil uil-comment-dots cursor-pointer"
+                            onClick={() => {
+                              if (quoteBoxCommentId === comment._id) {
+                                setQuoteBoxCommentId(null);
+                              } else {
+                                setQuoteBoxCommentId(comment._id);
+                              }
+                            }}
+                          ></i>
+                        </div>
+                      </div>
+
+                      <div>
+                        {quoteBoxCommentId === comment._id && (
+                          <div className="flex flex-col relative gap-4">
+                            <textarea
+                              className="border-2 outline-none mt-4 p-2 font-sans w-full relative"
+                              type="text"
+                              value={quote}
+                              onChange={(e) => setQuote(e.target.value)}
+                            />
+                            <button
+                              onClick={() => {
+                                if (quote.trim() !== "") {
+                                  dispatch(
+                                    quoteComment({
+                                      postId,
+                                      commentId: comment._id,
+                                      quote: quote,
+                                    })
+                                  );
+                                  setQuote("");
+                                  setQuoteBoxCommentId(null); // Close the quote box after quoting
+                                }
+                              }}
+                              className="w-1/4 p-2 bg-black text-white font-serif rounded-md"
+                            >
+                              Comment
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   ))
                 )}

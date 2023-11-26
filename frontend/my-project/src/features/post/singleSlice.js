@@ -38,6 +38,7 @@ const singleSlice = createSlice({
                 state.singlePost = {};
                 state.error = action.payload;
             });
+            
     },
 });
 

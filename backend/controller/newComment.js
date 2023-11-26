@@ -7,7 +7,7 @@ exports.newComment = [
     body('text')
         .trim() // Remove leading/trailing whitespace
         .isLength({ min: 1 }).withMessage('Text must be specified.')
-        .escape(), // Replace <, >, &, ', " and / with HTML entities
+        .escape(), 
 
     async (req, res, next) => {
         const errors = validationResult(req);

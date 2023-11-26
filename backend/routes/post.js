@@ -7,6 +7,8 @@ const { getSinglePost } = require('../controller/fetchSingle');
 const { newComment } = require('../controller/newComment');
 var router = express.Router();
 const jwt = require('jsonwebtoken');
+const { likeComment } = require('../controller/likeComment');
+const { quoteComment } = require('../controller/quoteComment');
 
 function auth(req, res, next) {
     const token = req.header('x-auth-token');
@@ -32,6 +34,8 @@ router.get('/', getPosts);
 
 router.get('/:postId', getSinglePost);
 router.post('/:postId/comment', auth, newComment);
+router.post('/:postId/like', auth, likeComment);
+router.post('/:postId/quote', auth, quoteComment);
 router.post('/create-post', auth, createPost);
 
 router.put('/update-post/:postId', auth, updatePost);

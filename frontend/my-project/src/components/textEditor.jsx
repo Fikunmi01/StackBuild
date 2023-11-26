@@ -26,7 +26,11 @@ const TextEditor = ({ comment, setComment, handleComment }) => {
     e.preventDefault();
     const text = quillRef.current.getText();
     setComment(text);
-    handleComment(text);
+    if (isQuote) {
+      handleQuote(text);
+    } else {
+      handleComment(text);
+    }
     quillRef.current.setText(""); // Clear the Quill editor's content
   };
 
