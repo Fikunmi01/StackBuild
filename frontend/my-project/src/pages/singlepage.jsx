@@ -16,12 +16,22 @@ export const SinglePost = () => {
   const [quote, setQuote] = useState("");
   const [quoteBox, setQuoteBox] = useState(false);
   const [quoteBoxCommentId, setQuoteBoxCommentId] = useState(""); // This is the commentId of the comment that is being quoted
+  const [isLiked, setIsLiked] = useState("");
   const user = useSelector((state) => state.user);
   const commentArray = Object.values(
     useSelector((state) => state.comment.comment)
   );
-  const isLiked =
-    comment && comment.likes ? comment.likes.includes(user._id) : false;
+
+  const [likedComments, setLikedComments] = useState([]);
+
+  // Toggle like status
+  const toggleLike = (commentId) => {
+    if (likedComments.includes(commentId)) {
+      setLikedComments(likedComments.filter((id) => id !== commentId));
+    } else {
+      setLikedComments([...likedComments, commentId]);
+    }
+  };
 
   useEffect(() => {
     // Fetch the individual post data when the component mounts
@@ -29,13 +39,23 @@ export const SinglePost = () => {
     if (postComment.fulfilled) {
       dispatch(fetchSingle(postId));
     }
-  }, [postId, comment.likes]);
+  }, [postId]);
+
+  useEffect(() => {
+    // update the nnumber of likes
+
+    dispatch(fetchSingle(postId));
+    dispatch(fetchSingle(comment._id));
+  }, [comment.likes]);
+
+  useEffect(() => {
+    // Re-render the component when the post.singlePost object changes
+  }, [post.singlePost]);
 
   const handleComment = (comment) => {
     if (comment.trim() !== "") {
       dispatch(postComment({ text: comment, postId }));
       setComment("");
-      dispatch(fetchSingle(postId));
     }
   };
 
@@ -102,101 +122,120 @@ export const SinglePost = () => {
                     </p>
                   </div>
                 ) : (
-                  Object.values(item.comments).map((comment, index) => (
-                    // const isLiked = comment.likes
-                    //   ? comment.likes.includes(user._id)
-                    //   : false;
-
-                    <div className="mb-4 px-3 border-2 rounded-md font-sans py-2">
-                      <p className="font-black mb-1 font-serif text-xs italic">
-                        {comment.username}
-                      </p>
-
-                      <div className="">
-                        <p key={index} className="mb-2">
-                          {comment.text}
-                        </p>
-                      </div>
-
-                      {comment.quotes &&
-                        comment.quotes.map((quote, quoteIndex) => (
-                          <div
-                            key={quoteIndex}
-                            className="pl-4 border-l-2 mb-4 mx-auto"
-                          >
-                            <p className="font-black mb-1 font-serif text-xs italic">
-                              {quote.username}
-                            </p>
-                            <p>{quote.quote}</p>
-                          </div>
-                        ))}
-
-                      <div className="flex items-center gap-4 text-2xl">
-                        <div>
-                          <img
-                            src="/assets/heart (1).png"
-                            alt=""
-                            className="uil uil-thumbs-up cursor-pointer"
-                            onClick={() =>
-                              dispatch(
-                                likeComment({
-                                  postId,
-                                  commentId: comment._id,
-                                })
-                              )
-                            }
-                          />
-
-                          {console.log("isLiked", isLiked)}
-                          {isLiked ? "liked" : "unlike"}
-                          <p className="text-base">
-                            {comment.likes.length} likes
+                  Object.values(item.comments).map((comment, index) => {
+                    // const isLiked =
+                    //   Array.isArray(comment.likes) &&
+                    //   comment.likes.includes(user._id);
+                    return (
+                      <>
+                        <div className="mb-4 px-3 border-2 rounded-md font-sans py-2">
+                          <p className="font-black mb-1 font-serif text-xs italic">
+                            {comment.username}
                           </p>
-                          <i
-                            className="uil uil-comment-dots cursor-pointer"
-                            onClick={() => {
-                              if (quoteBoxCommentId === comment._id) {
-                                setQuoteBoxCommentId(null);
-                              } else {
-                                setQuoteBoxCommentId(comment._id);
-                              }
-                            }}
-                          ></i>
-                        </div>
-                      </div>
 
-                      <div>
-                        {quoteBoxCommentId === comment._id && (
-                          <div className="flex flex-col relative gap-4">
-                            <textarea
-                              className="border-2 outline-none mt-4 p-2 font-sans w-full relative"
-                              type="text"
-                              value={quote}
-                              onChange={(e) => setQuote(e.target.value)}
-                            />
-                            <button
-                              onClick={() => {
-                                if (quote.trim() !== "") {
-                                  dispatch(
-                                    quoteComment({
-                                      postId,
-                                      commentId: comment._id,
-                                      quote: quote,
-                                    })
-                                  );
-                                  setQuote("");
-                                  setQuoteBoxCommentId(null); // Close the quote box after quoting
-                                }
-                              }}
-                              className="w-1/4 p-2 bg-black text-white font-serif rounded-md"
-                            >
-                              Comment
-                            </button>
+                          <div className="">
+                            <p key={index} className="mb-2">
+                              {comment.text}
+                            </p>
                           </div>
-                        )}
-                      </div>
-                    </div>
-                  ))
+
+                          {comment.quotes &&
+                            comment.quotes.map((quote, quoteIndex) => (
+                              <div
+                                key={quoteIndex}
+                                className="pl-4 border-l-2 mb-4 mx-auto"
+                              >
+                                <p className="font-black mb-1 font-serif text-xs italic">
+                                  {quote.username}
+                                </p>
+                                <p>{quote.quote}</p>
+                              </div>
+                            ))}
+
+                          <div className="flex items-center gap-4 text-2xl">
+                            <div className="flex items-center gap-2">
+                              <img
+                                className="w-4 cursor-pointer"
+                                src={
+                                  likedComments.includes(comment._id)
+                                    ? "/assets/heart.png"
+                                    : "/assets/heart1.png"
+                                }
+                                onClick={async () => {
+                                  if (!isAuthenticated) {
+                                    alert(
+                                      "You need to login to like a comment"
+                                    );
+                                  } else {
+                                    await dispatch(
+                                      likeComment({
+                                        postId,
+                                        commentId: comment._id,
+                                      })
+                                    )
+                                      .then(() => {
+                                        // Fetch the updated post data after liking a comment
+                                        dispatch(fetchSingle(postId));
+                                      })
+                                      .then(() => {
+                                        // Toggle the like status
+                                        toggleLike(comment._id);
+                                      });
+                                  }
+                                }}
+                              />
+
+                              <i
+                                className="uil uil-comment-dots cursor-pointer text-xl"
+                                onClick={() => {
+                                  if (quoteBoxCommentId === comment._id) {
+                                    setQuoteBoxCommentId(null);
+                                  } else {
+                                    setQuoteBoxCommentId(comment._id);
+                                  }
+                                }}
+                              ></i>
+                              <p className="text-base">
+                                {comment.likes.length} likes
+                              </p>
+                            </div>
+                          </div>
+
+                          <div>
+                            {quoteBoxCommentId === comment._id && (
+                              <div className="flex flex-col relative gap-4">
+                                <textarea
+                                  className="border-2 outline-none mt-4 p-2 font-sans w-full relative"
+                                  type="text"
+                                  value={quote}
+                                  onChange={(e) => setQuote(e.target.value)}
+                                />
+                                <button
+                                  onClick={() => {
+                                    if (quote.trim() !== "") {
+                                      dispatch(
+                                        quoteComment({
+                                          postId,
+                                          commentId: comment._id,
+                                          quote: quote,
+                                        })
+                                      );
+                                      setQuote("");
+                                      setQuoteBoxCommentId(null); // Close the quote box after quoting
+                                    }
+                                  }}
+                                  className="w-1/4 p-2 bg-black text-white font-serif rounded-md"
+                                >
+                                  Comment
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    );
+                    //after checking if the comment has been liked return the length for num of likes
+                  })
                 )}
               </div>
             </div>

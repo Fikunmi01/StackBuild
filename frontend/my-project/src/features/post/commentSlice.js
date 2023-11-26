@@ -21,7 +21,7 @@ export const postComment = createAsyncThunk("post/postComment", async ({ text, p
 });
 
 
-export const likeComment = createAsyncThunk("comment/likeComment", async ({ postId, commentId,isLiked }, { rejectWithValue }) => {
+export const likeComment = createAsyncThunk("comment/likeComment", async ({ postId, commentId, isLiked }, { rejectWithValue }) => {
     try {
         const token = localStorage.getItem('token')
         const response = await axios.post(`http://localhost:5000/post/${postId}/like`, { commentId }, {
@@ -67,16 +67,15 @@ const commentSlice = createSlice({
             .addCase(likeComment.pending, (state) => {
                 state.loading = true;
             })
-            builder.addCase(likeComment.fulfilled, (state, action) => {
-                const comment = state.comments.find(comment => comment._id === action.payload.commentId);
-                if (comment) {
-                  if (action.payload.isLiked) {
-                    comment.likes--;
-                  } else {
-                    comment.likes++;
-                  }
+        builder.addCase(likeComment.fulfilled, (state, action) => {
+            if (state.comment._id === action.payload.commentId) {
+                if (action.payload.isLiked) {
+                    state.comment.likes--;
+                } else {
+                    state.comment.likes++;
                 }
-              })
+            }
+        })
             .addCase(likeComment.rejected, (state, action) => {
                 state.loading = false;
                 state.comment = {};
