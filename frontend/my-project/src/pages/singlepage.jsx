@@ -92,7 +92,7 @@ export const SinglePost = () => {
               <p className="px-80 font-sans leading-normal">{item.content}</p>
             </div>
 
-            {isAuthenticated && (
+            {isAuthenticated ? (
               <>
                 <div className="pt-16 flex flex-col gap-y-4">
                   <TextEditor
@@ -102,6 +102,11 @@ export const SinglePost = () => {
                   />
                 </div>
               </>
+            ) : (
+              <p className="mx-80 relative m-auto p-4">
+                You need to <Link to="/user/login" className="underline">login</Link> before you can
+                comment
+              </p>
             )}
             <div className="mx-80 relative m-auto px-4 flex flex-col gap-20 py-16">
               <div>
