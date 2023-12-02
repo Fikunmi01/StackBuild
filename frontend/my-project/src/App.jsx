@@ -6,6 +6,7 @@ import { Search } from "./components/searchedPage";
 import { Login } from "./pages/login";
 import { Welcome } from "./pages/welcome";
 import { CreateAcc } from "./pages/createAcc";
+import { Profile } from "./pages/profile";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/user/login/:username" element={<Homepage />} />
         <Route path="/user/create-account" element={<CreateAcc />} />
         <Route path="/welcome" element={<Welcome/>}/>
+        <Route path="/profile" element={<Profile/>}/>
       </Routes>
     </div>
   );

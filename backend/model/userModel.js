@@ -28,7 +28,7 @@ userSchema.pre('save', async function (next) {
 
         // Set the id for the new document
         doc.id = lastDoc ? lastDoc.id + 1 : 1; // Generate a unique ID for the new user
-        console.log('User Id:', doc.id);
+        // console.log('User Id:', doc.id);
         next(); // Proceed to save the document
     } catch (err) {
         return next(err); // Handle any errors

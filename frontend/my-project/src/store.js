@@ -5,6 +5,7 @@ import commentSlice from './features/post/commentSlice';
 import searchSlice from './features/searchSlice';
 import loginSlice from './features/user/loginSlice';
 import accountSlice from './features/user/createSlice'
+import updateSlice from './features/user/updateSlice';
 
 const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
         search: searchSlice,
         user: loginSlice,
         create: accountSlice,
+        update: updateSlice
     }
 })
 

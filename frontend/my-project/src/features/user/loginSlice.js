@@ -4,6 +4,7 @@ import axios from "axios"
 const initialState = {
     loading: false,
     user: [],
+    userProfile:[],
     error: '',
     isAuthenticated: false,
 }
@@ -34,6 +35,7 @@ const loginSlice = createSlice({
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.loading = false;
                 state.user = action.payload;
+                state.userProfile=action.payload.user;
                 state.isAuthenticated = true;
             })
             .addCase(loginUser.rejected, (state, action) => {

@@ -1,7 +1,6 @@
 const UserModel = require("../model/userModel");
 
 exports.updateUser = async (req, res, next) => {
-    const userId = req.params.id;
     const { firstName, lastName, email, phoneNumber, imgSrc, username } = req.body;
     const updateData = {
         firstName: firstName,
@@ -14,7 +13,7 @@ exports.updateUser = async (req, res, next) => {
 
     try {
         const updatedUser = await UserModel.findOneAndUpdate(
-            { id: userId },
+            { id: _id },
             updateData,
             { new: true }
         );

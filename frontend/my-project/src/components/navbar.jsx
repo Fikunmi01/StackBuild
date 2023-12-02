@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { searchPost } from "../features/searchSlice";
-import { loginUser } from "../features/user/loginSlice";
 
 export const Navbar = () => {
   const dispatch = useDispatch();
@@ -22,6 +21,7 @@ export const Navbar = () => {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
   console.log(user);
+
 
   const handleClick = () => {
     setSearch(!search);
@@ -90,7 +90,11 @@ export const Navbar = () => {
 
             {isAuthenticated && <img src="/assets/bell.png" alt="" />}
 
-            {isAuthenticated && <img src="/assets/user 1.png" alt="" />}
+            {isAuthenticated && (
+              <Link to="/profile">
+                <img src="/assets/user 1.png" alt="" />
+              </Link>
+            )}
           </div>
         </div>
       </div>

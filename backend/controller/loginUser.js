@@ -22,12 +22,17 @@ exports.loginUser = async (req, res, next) => {
 
                 try {
                     const tokenValue = jwt.sign({ userId: existingUser.id, username:existingUser.username }, process.env.SECRET_KEY, { expiresIn: '1h' })
+                          // Fetch user data from the database
+                          const user = await UserModel.findOne({ _id: existingUser._id });
+                    
                     res.send({
                         status: 200,
                         message: "User successfully logged in",
                         username: existingUser.username,
-                        token: tokenValue
-                    });
+                        token: tokenValue,
+                        user:user
+                    });console.log('hdjdjd',user)
+
                 } catch (err) {
                     console.log("Token verification failed", err);
                     res.send({
