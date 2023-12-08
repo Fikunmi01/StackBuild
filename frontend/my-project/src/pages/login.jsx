@@ -34,12 +34,12 @@ export const Login = () => {
       <div>
         <Navbar />
 
-        <div className="flex items-center justify-center relative mt-20 w-1/2 m-auto">
+        <div className="flex items-center justify-center relative mt-4 md:mt-20 px-5 md:w-1/2 m-auto">
           <form onSubmit={handleSubmit}>
             <h2 className="text-center text-3xl font-serif font-bold leading-relaxed">
               Welcome back!
             </h2>
-            <p className="font-sans text-xl pb-4">
+            <p className="font-sans md:text-xl pb-4 text-md  m-auto">
               Sign in to get the most out of 3FK5
             </p>
 
@@ -51,7 +51,7 @@ export const Login = () => {
                   placeholder="Email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-[#F8F8F8] w-full pl-10 py-3 outline-none rounded-xl relative placeholder-shown:text-md text-base"
+                  className="bg-[#F8F8F8] w-full pl-10 py-3 outline-none rounded-xl relative placeholder-shown:text-sm md:placeholder-shown:text-base text-sm md:text-base"
                 />
                 <img
                   src="/assets/avatar.png"
@@ -65,7 +65,7 @@ export const Login = () => {
                   type="password"
                   name="password"
                   placeholder="Password"
-                  className="bg-[#F8F8F8] w-full pl-10 py-3 outline-none rounded-xl relative placeholder-shown:text-md text-base"
+                  className="bg-[#F8F8F8] w-full pl-10 py-3 outline-none rounded-xl relative placeholder-shown:text-sm md:placeholder-shown:text-md text-base"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -98,7 +98,7 @@ export const Login = () => {
           </form>
         </div>
 
-        <div className="top-36 flex justify-between mx-4 relative">
+        <div className="md:top-36 top-24 flex justify-between mx-4 relative">
           <Link to='/user/create-account'>
             Create account
           </Link>

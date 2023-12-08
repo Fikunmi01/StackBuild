@@ -35,7 +35,7 @@ const TextEditor = ({ comment, setComment, handleComment }) => {
   };
 
   return (
-    <div className="px-80 flex flex-col">
+    <div className="md:px-80 px-4 flex flex-col">
       <div id="editor-container" className="relative border-2 "></div>
       <button
         onClick={handleSubmit}

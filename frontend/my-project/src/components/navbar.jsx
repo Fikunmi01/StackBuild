@@ -22,7 +22,6 @@ export const Navbar = () => {
 
   console.log(user);
 
-
   const handleClick = () => {
     setSearch(!search);
   };
@@ -34,17 +33,19 @@ export const Navbar = () => {
   return (
     <>
       <div className="flex px-4 pt-6 pb-7 font-bold font-serif items-center justify-between">
-        <div className="flex gap-6 items-center">
-          <img src="/assets/Logo3.png" alt="" />
+        <div className="flex justify-between md:gap-6 items-center">
+          <Link to="/">
+            <img src="/assets/Logo3.png" alt="" />
+          </Link>
 
           <ul>
             <Link to="/">
-              <li className="text-xl">Home</li>
+              <li className="text-xl hidden md:visible">Home</li>
             </Link>
           </ul>
         </div>
 
-        <div className="flex">
+        <div className=" md:flex">
           <div className="flex items-center gap-6">
             <div>
               {search ? (
