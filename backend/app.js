@@ -1,18 +1,21 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var mongoose = require('mongoose')
-const url = 'mongodb://127.0.0.1:27017/stackbuild'
+require('dotenv')
+
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const mongoose = require('mongoose')
 const cors = require('cors');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var postsRouter = require('./routes/post');
-var searchRouter = require('./routes/search')
+const PORT = process.env.PORT || 5000;
 
-var app = express();
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const postsRouter = require('./routes/post');
+const searchRouter = require('./routes/search')
+
+const app = express();
 
 
 // view engine setup
@@ -38,13 +41,18 @@ app.use(function (req, res, next) {
 });
 
 // connect db
-mongoose.connect(url, {
-})
-  .then(() => console.log("MongoDB connected successfully"))
-  .catch((err) => console.log(err))
+if (process.env.NODE_ENV === 'development') {
+  mongoose.connect(process.env.MONGODB_DEV_URI, { useNewUrlParser: true })
+  console.log('development db connected')
+} else {
+  mongoose.connect(process.env.MONGODB_PROD_URI, { useNewUrlParser: true })
+  console.log('production db connected')
+}
+  
 // port listen
-app.listen(5000, () => console.log("You're connected on port 5000"))
-
+app.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
+});
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
