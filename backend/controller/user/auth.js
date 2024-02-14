@@ -5,9 +5,6 @@ const {
     successResponse,
     errorResponse,
 } = require('../../utils/responseHandler');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
 
 const createUser = async (req, res, next) => {
     const { email, password, firstName, lastName, username } = req.body;
@@ -51,7 +48,7 @@ const createUser = async (req, res, next) => {
 const loginUser = async (req, res, next) => {
     const { email, password } = req.body;
 
-    try{
+    try {
         const user = await UserModel.findOne({ email: email });
 
         if (!user) {
@@ -69,8 +66,11 @@ const loginUser = async (req, res, next) => {
             username: user.username,
         });
 
-        return successResponse(res, { user, token }, 'User logged in successfully');
-    
+        return successResponse(
+            res,
+            { user, token },
+            'User logged in successfully'
+        );
     } catch (err) {
         console.log('Error during login', err);
         return errorResponse(res, 'Internal server error', 500);
