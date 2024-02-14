@@ -1,4 +1,10 @@
 const UserModel = require('../../model/user.model');
+const { generateToken, verificationToken } = require('../../utils/token');
+const { hashPassword, comparePassword } = require('../../utils/hashPassword');
+const {
+    successResponse,
+    errorResponse,
+} = require('../../utils/responseHandler');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
@@ -7,99 +13,71 @@ const createUser = async (req, res, next) => {
     const { email, password, firstName, lastName, username } = req.body;
 
     try {
-        const user = await UserModel.findOne({ email });
-        if (user) {
-            res.send({
-                status: 409,
-                message: "User already exists"
-            });
-        } else {
-            const hashedPassword = await bcrypt.hash(password, 10);
+        const response = await UserModel.findOne({ email: email });
 
-            let newUser = new UserModel({
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                password: hashedPassword,
-                username: username,
-            });
-
-            const userPayload = newUser.toObject();
-
-            const token = jwt.sign(userPayload, process.env.SECRET_KEY);
-            newUser.token = token
-            await newUser.save();
-            console.log("User successfully created");
-            res.send({
-                status: 200,
-                message: "Account successfully created",
-            });
+        if (response) {
+            throw new Error('User already exists');
         }
-    } catch (err) {
-        console.log("Error during creating account", err);
-        res.send({
-            status: 500,
-            message: "Internal server error"
+
+        const hashedPassword = await hashPassword(password);
+
+        const token = verificationToken(6);
+
+        const user = await UserModel.create({
+            email,
+            password: hashedPassword,
+            firstName,
+            lastName,
+            username,
+            verificationToken: token,
         });
+
+        const tokenValue = generateToken({
+            userId: user._id,
+            username: user.username,
+        });
+
+        return successResponse(
+            res,
+            { user, token: tokenValue },
+            'User created successfully'
+        );
+    } catch (err) {
+        console.log('Error during creating account', err);
+        return errorResponse(res, 'Internal server error', 500);
     }
 };
 
 const loginUser = async (req, res, next) => {
     const { email, password } = req.body;
 
-    try {
-        const existingUser = await UserModel.findOne({ email: email });
+    try{
+        const user = await UserModel.findOne({ email: email });
 
-        if (!existingUser) {
-            res.send({
-                status: 401,
-                message: "No account associated with this email"
-            });
-        } else {
-            const matchPassword = await bcrypt.compare(password, existingUser.password);
-
-            if (matchPassword) {
-                console.log('User successfully logged in');
-
-                try {
-                    const tokenValue = jwt.sign({ userId: existingUser.id, username:existingUser.username }, process.env.SECRET_KEY, { expiresIn: '1h' })
-                          // Fetch user data from the database
-                          const user = await UserModel.findOne({ _id: existingUser._id });
-                    
-                    res.send({
-                        status: 200,
-                        message: "User successfully logged in",
-                        username: existingUser.username,
-                        token: tokenValue,
-                        user:user
-                    });console.log('hdjdjd',user)
-
-                } catch (err) {
-                    console.log("Token verification failed", err);
-                    res.send({
-                        status: 401,
-                        message: "Token verification failed"
-                    });
-
-                }
-
-            } else {
-                res.send({
-                    status: 401,
-                    message: "Incorrect email address or password"
-                });
-            }
+        if (!user) {
+            throw new Error('Invalid email or password');
         }
-    } catch (err) {
-        console.log("Error during login", err);
-        res.send({
-            status: 500,
-            message: "Internal server error"
+
+        const isMatch = await comparePassword(password, user.password);
+
+        if (!isMatch) {
+            throw new Error('Invalid email or password');
+        }
+
+        const token = generateToken({
+            userId: user._id,
+            username: user.username,
         });
+
+        return successResponse(res, { user, token }, 'User logged in successfully');
+    
+    } catch (err) {
+        console.log('Error during login', err);
+        return errorResponse(res, 'Internal server error', 500);
     }
 };
 
 module.exports = {
     createUser,
-    loginUser
+    loginUser,
 };
