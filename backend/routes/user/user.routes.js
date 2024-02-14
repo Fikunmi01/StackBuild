@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { updateUser, profile } = require('../../controller/user');
+const { updateUser, profile, uploadDP } = require('../../controller/user');
 const router = Router();
 
 function auth(req, res, next) {
@@ -23,7 +23,7 @@ function auth(req, res, next) {
 router.get('/', function (req, res, next) {
     res.send('respond with a resource');
 });
-
+router.post("/:userId/picture", uploadDP);
 router.put('/update/:id', auth, updateUser);
 router.get('/me/:id', auth, profile)
 

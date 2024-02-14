@@ -1,6 +1,7 @@
 const {
     profile,
-    updateUser
+    updateUser,
+    uploadDP
 } = require('../user/user');
 
 const {
@@ -29,6 +30,7 @@ module.exports = {
     createPost,
     updatePost,
     deletePost,
+    uploadDP,
     getPosts,
     getSinglePost,
     searchPost,
