@@ -4,8 +4,16 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 // generate token
-const generateToken = (user) => {
-    return jwt.sign(user, process.env.SECRET_KEY);
+const generateToken = (payload) => {
+    const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: '1d',
+    });
+
+    const refreshToken = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: '7d',
+    });
+
+    return { accessToken, refreshToken };
 };
 
 const verificationToken = (length) => {
