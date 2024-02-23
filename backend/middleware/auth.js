@@ -1,15 +1,41 @@
-function auth(req, res, next) {
-    const token = req.header('x-auth-token');
-    console.log('Token:', token); // Log the token
-    console.log(req.user)
-    if (!token) return res.status(401).send('Access denied. No token provided.');
+const { errorResponse } = require('../utils/responseHandler');
+const { verify } = require('jsonwebtoken');
 
-    try {
-        const decoded = jwt.verify(token, process.env.SECRET_KEY);
-        console.log('Decoded:', decoded); // Log the decoded object
-        req.user = decoded;
-        next();
-    } catch (ex) {
-        res.status(400).send('Invalid token.');
+const extractToken = (req) => {
+    const token = req.headers.authorization;
+
+    if (token && token.startsWith('Bearer ')) {
+        return token.split(' ')[1];
     }
-}
+
+    return null;
+};
+
+const auth = async (req, res, next) => {
+    const token = extractToken(req);
+
+    if (!token) {
+        return errorResponse(res, 'Unauthorized', 401);
+    }
+
+    verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            if (err.name === 'TokenExpiredError') {
+                return errorResponse(res, 'Token expired', 401);
+            }
+
+            if (err.name === 'JsonWebTokenError') {
+                return errorResponse(res, 'Invalid token', 401);
+            }
+
+            return errorResponse(res, 'Unauthorized', 401);
+        }
+
+        req.user = decoded;
+        return next();
+    });
+};
+
+module.exports = {
+    auth
+};

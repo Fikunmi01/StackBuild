@@ -23,11 +23,11 @@ const profile = async (req, res, next) => {
 const uploadDP = async (req, res, next) => {
     const userId = req.params.userId;
 
-    // if (req.user._id !== userId) {
-    //     return res.status(401).json({
-    //         message: "Unauthorized"
-    //     })
-    // };
+    if (req.user.id !== userId) {
+        return res.status(401).json({
+            message: "Unauthorized"
+        })
+    };
 
     const form = new formidable.IncomingForm();
 
@@ -81,36 +81,59 @@ const uploadDP = async (req, res, next) => {
 }
 
 const updateUser = async (req, res, next) => {
-    const { firstName, lastName, email, phoneNumber, imgSrc, username } = req.body;
+    const { firstName, lastName, email, phoneNumber, username } = req.body;
+
+    const _id = req.user.id;
+
+    console.log(_id, req.user)
+  
+    // Check if the user is trying to update the username
+    const isUsernameUpdate = username !== undefined;
+  
+    // Fetch the user data
+    const user = await UserModel.findById(_id);
+  
+    if (!user) {
+      return res.status(404).json({
+        status: 404,
+        message: 'User not found',
+      });
+    }
+  
+    // Check if username update is allowed based on previous updates
+    if (isUsernameUpdate && user.usernameUpdates >= 1) {
+      return res.status(403).json({
+        status: 403,
+        message: 'Username can only be updated once',
+      });
+    }
+  
+    // Prepare update data (exclude username if update not allowed)
     const updateData = {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        phoneNumber: phoneNumber,
-        imgSrc: imgSrc,
-        username: username
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+    };
+    if (isUsernameUpdate) {
+      updateData.username = username;
+      user.usernameUpdates++; // Increment username update count
     }
-
+  
     try {
-        const updatedUser = await UserModel.findOneAndUpdate(
-            { id: _id },
-            updateData,
-            { new: true }
-        );
-
-        if (!updatedUser) {
-            return res.status(404).json({
-                status: 404,
-                message: 'User not found',
-            });
-        }
-
-        return successResponse(res, updatedUser, 'User updated successfully');
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        _id,
+        updateData,
+        { new: true }
+      );
+  
+      return successResponse(res, updatedUser, 'User updated successfully');
     } catch (err) {
-        console.error('Error updating user:', err);
-        return errorResponse(res, 'Internal server error', 500);
+      console.error('Error updating user:', err);
+      return errorResponse(res, 'Internal server error', 500);
     }
-};
+  };
+  
 
 module.exports = {
     profile,

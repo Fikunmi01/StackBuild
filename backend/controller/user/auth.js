@@ -30,13 +30,17 @@ const createUser = async (req, res, next) => {
         });
 
         const tokenValue = generateToken({
-            userId: user._id,
+            id: user._id,
             username: user.username,
         });
 
+        const { password, ...rest } = user.toJSON();
+
+
+
         return successResponse(
             res,
-            { user, token: tokenValue },
+            { user: rest, token: tokenValue },
             'User created successfully'
         );
     } catch (err) {
@@ -62,7 +66,7 @@ const loginUser = async (req, res, next) => {
         }
 
         const token = generateToken({
-            userId: user._id,
+            id: user._id,
             username: user.username,
         });
 
