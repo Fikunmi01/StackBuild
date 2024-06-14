@@ -1,7 +1,7 @@
 /**
  * @swagger
  * tags:
- *   name: Users
+ *   name: Auth
  *   description: User management and authentication
  */
 
