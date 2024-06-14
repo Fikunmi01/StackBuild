@@ -37,7 +37,7 @@ app.use(cors());
 
 app.use("/", indexRouter);
 app.use("/api/user", UserRoutes);
-app.use("/api/post", PostRoutes);
+app.use("/api/posts", PostRoutes);
 app.use("/api/auth", AuthRoutes);
 app.use("/api/search", SearchRoutes);
 
