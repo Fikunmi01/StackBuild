@@ -26,13 +26,6 @@
  *           type: array
  *           items:
  *             $ref: '#/components/schemas/Comment'
- *     Comment:
- *       type: object
- *       properties:
- *         text:
- *           type: string
- *         username:
- *           type: string
  */
 
 /**
