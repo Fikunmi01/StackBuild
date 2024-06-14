@@ -18,7 +18,6 @@ const options = {
   apis: [
     "docs/auth.doc.js",
     "docs/user.doc.js",
-    "docs/search.doc.js",
     "docs/posts.doc.js",
   ],
 };
