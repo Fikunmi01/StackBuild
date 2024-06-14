@@ -7,9 +7,9 @@ const {
 } = require("../../utils/responseHandler");
 
 const createUser = async (req, res, next) => {
-  const { email, password, firstName, lastName, username } = req.body;
-
   try {
+    const { email, password, firstName, lastName, username } = req.body;
+
     const response = await UserModel.findOne({ email: email });
 
     if (response) {
@@ -34,7 +34,7 @@ const createUser = async (req, res, next) => {
       username: user.username,
     });
 
-    const { password, ...rest } = user.toJSON();
+    const { new_password, ...rest } = user.toJSON();
 
     return successResponse(
       res,
