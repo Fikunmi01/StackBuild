@@ -1,42 +1,48 @@
-const {
-    profile,
-    updateUser,
-    uploadDP
-} = require('../user/user');
+export * from "./auth";
+export * from "./comment";
+export * from "./posts";
+export * from "./upload";
+export * from "./user";
 
-const {
-    createPost,
-    updatePost,
-    deletePost,
-    getPosts,
-    getSinglePost,
-    searchPost
-} = require('../User/post');
+// const {
+//     profile,
+//     updateUser,
+//     uploadDP
+// } = require('../user/user');
 
-const {
-    createUser,
-    loginUser
-} = require('../User/auth');
+// const {
+//     createPost,
+//     updatePost,
+//     deletePost,
+//     getPosts,
+//     getSinglePost,
+//     searchPost
+// } = require('../user/post');
 
-const {
-    newComment,
-    likeComment,
-    quoteComment
-} = require('../User/comment');
+// const {
+//     createUser,
+//     loginUser
+// } = require('../user/auth');
 
-module.exports = {
-    profile,
-    updateUser,
-    createPost,
-    updatePost,
-    deletePost,
-    uploadDP,
-    getPosts,
-    getSinglePost,
-    searchPost,
-    createUser,
-    loginUser,
-    newComment,
-    likeComment,
-    quoteComment
-}
+// const {
+//     newComment,
+//     likeComment,
+//     quoteComment
+// } = require('../user/comment');
+
+// module.exports = {
+//     profile,
+//     updateUser,
+//     createPost,
+//     updatePost,
+//     deletePost,
+//     uploadDP,
+//     getPosts,
+//     getSinglePost,
+//     searchPost,
+//     createUser,
+//     loginUser,
+//     newComment,
+//     likeComment,
+//     quoteComment
+// }
