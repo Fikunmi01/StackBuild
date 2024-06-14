@@ -8,7 +8,7 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 
 const indexRouter = require("./routes/index");
 const UserRoutes = require("./routes/user/user.routes");
