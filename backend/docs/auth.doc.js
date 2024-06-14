@@ -31,20 +31,6 @@
  *           type: string
  *         password:
  *           type: string
- *     LoginResponse:
- *       type: object
- *       properties:
- *         user:
- *           $ref: '#/components/schemas/User'
- *         token:
- *           type: string
- *     RegisterResponse:
- *       type: object
- *       properties:
- *         user:
- *           $ref: '#/components/schemas/User'
- *         token:
- *           type: string
  */
 
 /**
