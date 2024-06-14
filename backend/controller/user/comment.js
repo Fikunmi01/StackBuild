@@ -1,7 +1,8 @@
 const { body, validationResult } = require("express-validator");
 const PostModel = require("../../model/post.model");
+const validator = require("validator");
 
-export const newComment = [
+const newComment = [
   // Validate and sanitize the text field.
   body("text")
     .trim() // Remove leading/trailing whitespace
@@ -42,7 +43,7 @@ export const newComment = [
   },
 ];
 
-export const quoteComment = async (req, res, next) => {
+const quoteComment = async (req, res, next) => {
   try {
     console.log(req.body); // Log the request body
     const { postId } = req.params;
@@ -65,7 +66,7 @@ export const quoteComment = async (req, res, next) => {
   }
 };
 
-export const likeComment = async (req, res, next) => {
+const likeComment = async (req, res, next) => {
   try {
     const { postId } = req.params;
     const { commentId } = req.body;
@@ -89,4 +90,10 @@ export const likeComment = async (req, res, next) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+};
+
+module.exports = {
+  newComment,
+  quoteComment,
+  likeComment,
 };

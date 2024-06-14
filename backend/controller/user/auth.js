@@ -6,7 +6,7 @@ const {
   errorResponse,
 } = require("../../utils/responseHandler");
 
-export const createUser = async (req, res, next) => {
+const createUser = async (req, res, next) => {
   const { email, password, firstName, lastName, username } = req.body;
 
   try {
@@ -47,7 +47,7 @@ export const createUser = async (req, res, next) => {
   }
 };
 
-export const loginUser = async (req, res, next) => {
+const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
@@ -73,4 +73,9 @@ export const loginUser = async (req, res, next) => {
     console.log("Error during login", err);
     return errorResponse(res, "Internal server error", 500);
   }
+};
+
+module.exports = {
+  createUser,
+  loginUser,
 };

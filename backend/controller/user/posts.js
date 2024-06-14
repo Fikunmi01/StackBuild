@@ -1,6 +1,6 @@
 const PostModel = require("../../model/post.model");
 
-export const createPost = async (req, res, next) => {
+const createPost = async (req, res, next) => {
   const { title, content, imgSrc, commentText, tag, author } = req.body;
 
   try {
@@ -30,7 +30,7 @@ export const createPost = async (req, res, next) => {
   }
 };
 
-export const getSinglePost = async (req, res, next) => {
+const getSinglePost = async (req, res, next) => {
   try {
     const postId = req.params.postId;
 
@@ -51,7 +51,7 @@ export const getSinglePost = async (req, res, next) => {
   }
 };
 
-export const getPosts = async (req, res, next) => {
+const getPosts = async (req, res, next) => {
   try {
     const posts = await PostModel.find(); // Retrieve all posts from the database
     res.status(200).json(posts);
@@ -62,7 +62,7 @@ export const getPosts = async (req, res, next) => {
 };
 
 // Define a route to search for posts
-export const searchPost = async (req, res, next) => {
+const searchPost = async (req, res, next) => {
   try {
     const query = req.query.q;
 
@@ -84,7 +84,7 @@ export const searchPost = async (req, res, next) => {
   }
 };
 
-export const updatePost = async (req, res, next) => {
+const updatePost = async (req, res, next) => {
   const { title, content, imgSrc } = req.body;
   const postId = req.params.postId.toString(); // Access postId from req.params
 
@@ -118,7 +118,7 @@ export const updatePost = async (req, res, next) => {
   }
 };
 
-export const deletePost = async (req, res, next) => {
+const deletePost = async (req, res, next) => {
   const postId = req.params.postId.toString(); // Access postId from req.params
 
   try {
@@ -137,4 +137,13 @@ export const deletePost = async (req, res, next) => {
     console.error(error);
     res.status(500).json({ error: "Server error" });
   }
+};
+
+module.exports = {
+  createPost,
+  getPosts,
+  getSinglePost,
+  updatePost,
+  deletePost,
+  searchPost,
 };
