@@ -16,7 +16,12 @@ const PostRoutes = require("./routes/user/post.routes");
 const AuthRoutes = require("./routes/user/auth.routes");
 const SearchRoutes = require("./routes/user/search.routes");
 
+const swaggerUi = require("swagger-ui-express");
+const specs = require("./swagger");
+
 const app = express();
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
