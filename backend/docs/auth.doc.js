@@ -9,7 +9,7 @@
  * @swagger
  * components:
  *   schemas:
- *     User:
+ *     Auth:
  *       type: object
  *       properties:
  *         firstName:
