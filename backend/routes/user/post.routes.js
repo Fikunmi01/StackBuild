@@ -30,17 +30,16 @@ function auth(req, res, next) {
     }
 }
 
-/* GET post listing. */
+router.post('/', auth, createPost);
 router.get('/', getPosts);
 
 router.get('/:postId', getSinglePost);
 router.post('/:postId/comment', auth, newComment);
 router.post('/:postId/like', auth, likeComment);
 router.post('/:postId/quote', auth, quoteComment);
-router.post('/create-post', auth, createPost);
 
-router.put('/update-post/:postId', auth, updatePost);
-router.delete('/delete-post/:postId', auth, deletePost);
+router.put('/:postId', auth, updatePost);
+router.delete('/:postId', auth, deletePost);
 
 const PostRoutes = router;
 module.exports = PostRoutes;

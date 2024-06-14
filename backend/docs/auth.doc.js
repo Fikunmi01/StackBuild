@@ -49,7 +49,7 @@
 
 /**
  * @swagger
- * /auth/register:
+ * /auth/signup:
  *   post:
  *     summary: Register a new user
  *     tags: [Users]

@@ -117,31 +117,6 @@
 
 /**
  * @swagger
- * /posts/search:
- *   get:
- *     summary: Search for posts
- *     tags: [Posts]
- *     parameters:
- *       - in: query
- *         name: q
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       '200':
- *         description: Search results retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Post'
- *       '500':
- *         description: An error occurred while searching for posts
- */
-
-/**
- * @swagger
  * /posts/{postId}:
  *   put:
  *     summary: Update a post by ID
