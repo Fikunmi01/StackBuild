@@ -24,13 +24,6 @@
  *           type: string
  *         role:
  *           type: string
- *     AuthUser:
- *       type: object
- *       properties:
- *         email:
- *           type: string
- *         password:
- *           type: string
  */
 
 /**

@@ -31,7 +31,7 @@
 
 /**
  * @swagger
- * /users/me/{userId}:
+ * /user/profile/{userId}:
  *   get:
  *     summary: Get user profile by ID
  *     tags: [Users]
@@ -56,7 +56,7 @@
 
 /**
  * @swagger
- * /users/{userId}/picture:
+ * /user/{userId}/picture:
  *   post:
  *     summary: Upload a profile picture
  *     tags: [Users]

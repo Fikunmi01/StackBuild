@@ -5,6 +5,6 @@ const { auth } = require("../../middleware/auth");
 
 router.post("/:userId/picture", uploadDP);
 router.patch("/update", auth, updateUser);
-router.get("/me/:id", auth, profile);
+router.get("/profile/:id", auth, profile);
 
 module.exports = router;
