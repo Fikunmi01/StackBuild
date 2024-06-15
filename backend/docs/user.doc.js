@@ -103,7 +103,7 @@
 /**
  * @swagger
  * /user/update:
- *   put:
+ *   patch:
  *     summary: Update user details
  *     tags: [Users]
  *     security:
