@@ -10,7 +10,7 @@ const profile = async (req, res, next) => {
         const user = await UserModel.findById(userId);
 
         if (!user) {
-            throw new Error('User not found');
+          return errorResponse(res, 'Not Found', 400);
         }
 
         return successResponse(res, user, 'User fetched successfully');
