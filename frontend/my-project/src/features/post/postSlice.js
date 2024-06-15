@@ -7,35 +7,29 @@ const initialState = {
     error: ''
 };
 
-// Create an async thunk to fetch users
-export const fetchPosts = createAsyncThunk('post/', () => {
-    return axios
-        .get('http://localhost:5000/post')
-        .then((response) => response.data);
+// Create an async thunk to fetch posts
+export const fetchPosts = createAsyncThunk('post/fetchPosts', async () => {
+    const response = await axios.get('https://stackbuild.onrender.com/api/posts');
+    return response.data;
 });
 
 // Action to add a new post
-export const addPost = (postData) => createAsyncThunk('post/create-post', () => {
-    return axios
-        .post('http://localhost:5000/post/create-post', postData)
-        .then((response) => response.data);
+export const addPost = createAsyncThunk('post/addPost', async (postData) => {
+    const response = await axios.post('https://stackbuild.onrender.com/api/posts', postData);
+    return response.data;
 });
 
 // Action to update an existing post
-export const updatePost = (postId, updatedPostData) => createAsyncThunk('post/update-post', () => {
-    return axios
-        .put(`http://localhost:5000/post/update-post/${postId}`, updatedPostData)
-        .then((response) => response.data);
+export const updatePost = createAsyncThunk('post/updatePost', async ({ postId, updatedPostData }) => {
+    const response = await axios.put(`https://stackbuild.onrender.com/api/posts/${postId}`, updatedPostData);
+    return response.data;
 });
 
 // Action to delete a post
-export const deletePost = (postId) => createAsyncThunk('post/delete-post', () => {
-    return axios
-        .delete(`http://localhost:5000/post/delete-post/${postId}`)
-        .then((response) => response.data)
-
+export const deletePost = createAsyncThunk('post/deletePost', async (postId) => {
+    const response = await axios.delete(`https://stackbuild.onrender.com/api/posts/${postId}`);
+    return response.data;
 });
-
 
 const postSlice = createSlice({
     name: 'Posts',
@@ -54,10 +48,21 @@ const postSlice = createSlice({
                 state.loading = false;
                 state.post = [];
                 state.error = action.error.message;
+            })
+            // Handle addPost, updatePost, and deletePost similarly
+            .addCase(addPost.fulfilled, (state, action) => {
+                state.post.push(action.payload); // Assuming the backend returns the new post
+            })
+            .addCase(updatePost.fulfilled, (state, action) => {
+                const index = state.post.findIndex(post => post.id === action.payload.id);
+                if (index !== -1) {
+                    state.post[index] = action.payload; // Assuming the backend returns the updated post
+                }
+            })
+            .addCase(deletePost.fulfilled, (state) => {
+                state.post = state.post.filter(post => post.id !== action.meta.arg); // Assuming the post ID is passed as arg
             });
-    
     },
 });
-
 
 export default postSlice.reducer;

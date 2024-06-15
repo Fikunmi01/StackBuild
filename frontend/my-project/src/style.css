@@ -50,46 +50,8 @@ html {
   /* 5 */
   font-variation-settings: normal;
   /* 6 */
-  scroll-behavior: smooth;
-}
-.loader {
-  width: 32px;
-  height: 32px;
-  transform: translateY(100%);
-  border-radius: 50%;
-  background: #FFF;
-  position: relative;
-}
-.loader:before , .loader:after{
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: #FFF;
-  left: 50%;
-  transform: translateX(-50%);
-  top: -200%;
-}
-.loader:after {
-  animation: moveX 0.5s infinite linear alternate;
 }
 
-@keyframes moveX {
-  0% {
-    top: 0% ;
-    transform: translateX(-50%) scale(1.5);
-  }
-  50% {
-    top: -75% ;
-    transform: translateX(-50%) scale(0.5);
-  }
-  100% {
-    top: -200%;
-    transform: translateX(-50%) scale(1.5);
-  }
-}
-      
 /*
 1. Remove the margin in all browsers.
 2. Inherit line-height from `html` so users can set them as a class directly on the `html` element.
@@ -634,12 +596,12 @@ video {
   margin-top: 1rem;
 }
 
-.mt-6 {
-  margin-top: 1.5rem;
-}
-
 .mt-5 {
   margin-top: 1.25rem;
+}
+
+.mt-6 {
+  margin-top: 1.5rem;
 }
 
 .flex {
@@ -664,6 +626,10 @@ video {
 
 .h-96 {
   height: 24rem;
+}
+
+.h-full {
+  height: 100%;
 }
 
 .w-1\/4 {
@@ -866,16 +832,6 @@ video {
   padding-right: 1.25rem;
 }
 
-.px-80 {
-  padding-left: 20rem;
-  padding-right: 20rem;
-}
-
-.py-0 {
-  padding-top: 0px;
-  padding-bottom: 0px;
-}
-
 .py-1 {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
@@ -1005,16 +961,16 @@ video {
   font-weight: 700;
 }
 
+.font-medium {
+  font-weight: 500;
+}
+
 .font-normal {
   font-weight: 400;
 }
 
 .font-semibold {
   font-weight: 600;
-}
-
-.font-medium {
-  font-weight: 500;
 }
 
 .italic {
@@ -1127,20 +1083,12 @@ video {
     margin-bottom: 0.5rem;
   }
 
-  .md\:mb-4 {
-    margin-bottom: 1rem;
-  }
-
   .md\:mt-0 {
     margin-top: 0px;
   }
 
   .md\:mt-20 {
     margin-top: 5rem;
-  }
-
-  .md\:mt-5 {
-    margin-top: 1.25rem;
   }
 
   .md\:block {

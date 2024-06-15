@@ -5,15 +5,15 @@ import { updateUser } from "../features/user/updateSlice";
 import { useParams } from "react-router-dom";
 
 export const Profile = () => {
-  const userProfile = useSelector((state) => state.user.userProfile);
+  const userProfile = useSelector((state) => state.user.user?.data?.user ?? {});
+
   const dispatch = useDispatch();
 
-  // State variables to hold the edited values
-  const [editedFirstName, setEditedFirstName] = useState(userProfile.firstName);
-  const [editedLastName, setEditedLastName] = useState(userProfile.lastName);
-  const [editedEmail, setEditedEmail] = useState(userProfile.email);
-  const [editedUsername, setEditedUsername] = useState(userProfile.username);
-  const { userId } = useParams();
+  // State variables to hold the edited values, with default values to avoid undefined
+  const [editedFirstName, setEditedFirstName] = useState(userProfile.firstName ?? '');
+  const [editedLastName, setEditedLastName] = useState(userProfile.lastName ?? '');
+  const [editedEmail, setEditedEmail] = useState(userProfile.email ?? '');
+  const [editedUsername, setEditedUsername] = useState(userProfile.username ?? '');
 
   // State variable to track edit mode
   const [editMode, setEditMode] = useState(false);
@@ -45,28 +45,18 @@ export const Profile = () => {
 
   // Function to handle "Save" button click
   const handleSaveClick = () => {
-    // Call your updateUser function here with the edited values
     const updateData = {
       firstName: editedFirstName,
       lastName: editedLastName,
       email: editedEmail,
       username: editedUsername,
-      // Add other fields if needed
     };
 
     try {
-      // Assuming updateUser is an asynchronous function
-      dispatch(
-        updateUser({
-          id: userProfile.id,
-          userData: {
-            firstName: editedFirstName,
-            lastName: editedLastName,
-            email: editedEmail,
-            username: editedUsername,
-          },
-        })
-      );
+      dispatch(updateUser({
+        id: userProfile.id,
+        userData: updateData,
+      }));
       setEditMode(false); // Switch back to view mode after saving
     } catch (error) {
       console.error(error);
@@ -167,7 +157,7 @@ export const Profile = () => {
                   Date Joined:
                 </label>
                 <input
-                  value={userProfile.dateJoined.slice(0, 10)}
+                  value={userProfile.dateJoined ? userProfile.dateJoined.slice(0, 10) : ''}
                   readOnly
                   className="h-10 outline-none text-lg font-sans"
                 />

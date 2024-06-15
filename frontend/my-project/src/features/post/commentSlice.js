@@ -9,22 +9,20 @@ const initialState = {
 
 export const postComment = createAsyncThunk("post/postComment", async ({ text, postId, username }, { rejectWithValue }) => {
     try {
-        const token = localStorage.getItem('token')
-        const response = await axios.post(`http://localhost:5000/post/${postId}/comment`, { text, postId, username }, {
+        const token = localStorage.getItem('token');
+        const response = await axios.post(`https://stackbuild.onrender.com/api/post/${postId}/comment`, { text, username }, {
             headers: { 'x-auth-token': token }
         });
         return response.data;
     } catch (error) {
         return rejectWithValue(error.message);
     }
-
 });
-
 
 export const likeComment = createAsyncThunk("comment/likeComment", async ({ postId, commentId, isLiked }, { rejectWithValue }) => {
     try {
-        const token = localStorage.getItem('token')
-        const response = await axios.post(`http://localhost:5000/post/${postId}/like`, { commentId }, {
+        const token = localStorage.getItem('token');
+        const response = await axios.post(`https://stackbuild.onrender.com/api/comment/${commentId}/like`, { isLiked }, {
             headers: { 'x-auth-token': token }
         });
         return response.data;
@@ -35,8 +33,8 @@ export const likeComment = createAsyncThunk("comment/likeComment", async ({ post
 
 export const quoteComment = createAsyncThunk("comment/quoteComment", async ({ postId, commentId, quote }, { rejectWithValue }) => {
     try {
-        const token = localStorage.getItem('token')
-        const response = await axios.post(`http://localhost:5000/post/${postId}/quote`, { commentId, quote }, {
+        const token = localStorage.getItem('token');
+        const response = await axios.post(`https://stackbuild.onrender.com/api/comment/${commentId}/quote`, { quote }, {
             headers: { 'x-auth-token': token }
         });
         return response.data;
@@ -67,15 +65,15 @@ const commentSlice = createSlice({
             .addCase(likeComment.pending, (state) => {
                 state.loading = true;
             })
-        builder.addCase(likeComment.fulfilled, (state, action) => {
-            if (state.comment._id === action.payload.commentId) {
-                if (action.payload.isLiked) {
-                    state.comment.likes--;
-                } else {
-                    state.comment.likes++;
+            .addCase(likeComment.fulfilled, (state, action) => {
+                if (state.comment._id === action.payload.commentId) {
+                    if (action.payload.isLiked) {
+                        state.comment.likes--;
+                    } else {
+                        state.comment.likes++;
+                    }
                 }
-            }
-        })
+            })
             .addCase(likeComment.rejected, (state, action) => {
                 state.loading = false;
                 state.comment = {};

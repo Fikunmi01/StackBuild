@@ -1,4 +1,4 @@
-import React from "react";
+import React,{Suspense,lazy} from "react";
 import { Navbar } from "../components/navbar";
 import { Hero } from "../components/hero";
 import { Editor } from "../components/editor";

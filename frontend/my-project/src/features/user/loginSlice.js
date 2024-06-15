@@ -11,7 +11,7 @@ const initialState = {
 
 export const loginUser = createAsyncThunk('login/user', async ({ email, password, username }) => {
     try {
-        const response = await axios.post(`http://localhost:5000/user/login/`, { email, password });
+        const response = await axios.post(`https://stackbuild.onrender.com/api/auth/login/`, { email, password });
         return response.data;
     } catch (error) {
         if (error.response && error.response.status === 401) {

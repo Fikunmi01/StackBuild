@@ -10,7 +10,7 @@ const initialState = {
 
 export const searchPost = createAsyncThunk('search/', async (q) => {
     try {
-        const response = await axios.get(`http://localhost:5000/search?q=${q}`);
+        const response = await axios.get(`https://stackbuild.onrender.com/api/search?q=${q}`);
         console.log(response.data)
         return response.data;
     } catch (error) {

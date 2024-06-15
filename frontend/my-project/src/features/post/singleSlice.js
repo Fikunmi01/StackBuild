@@ -10,7 +10,7 @@ const initialState = {
 export const fetchSingle = createAsyncThunk('post/fetchSingle', async (postId, { rejectWithValue }) => {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`http://localhost:5000/post/${postId}`, {
+        const response = await axios.get(`https://stackbuild.onrender.com/api/posts/${postId}`, {
             headers: { 'x-auth-token': token }
         });
         return response.data;

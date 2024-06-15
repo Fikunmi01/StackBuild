@@ -9,7 +9,7 @@ const initialState = {
 
 export const createUser = createAsyncThunk('/create-account/user', async ({ email, username, password, firstName, lastName }) => {
     try {
-        const response = await axios.post('http://localhost:5000/user/create-account', { email, username, password, firstName, lastName, });
+        const response = await axios.post('https://stackbuild.onrender.com/api/auth/signup', { email, username, password, firstName, lastName, });
         return response.data;
     }
     catch (error) {
