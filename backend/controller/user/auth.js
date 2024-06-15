@@ -51,29 +51,38 @@ const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
+    // Debug: Check email and password from request body
+    console.log("Login attempt with email:", email);
+
+    // Find user by email
     const user = await UserModel.findOne({ email: email });
 
     if (!user) {
-      throw new Error("Invalid email or password");
+      console.log("User not found with email:", email);
+      return errorResponse(res, "Invalid email or password", 400);
     }
 
+    // Debug: User found, check password comparison
     const isMatch = await comparePassword(password, user.password);
-
     if (!isMatch) {
-      throw new Error("Invalid email or password");
+      console.log("Incorrect password for email:", email);
+      return errorResponse(res, "Incorrect password", 400);
     }
 
+    // Debug: Password match, generating token
     const token = generateToken({
       id: user._id,
       username: user.username,
     });
 
+    console.log("User logged in successfully with email:", email);
     return successResponse(res, { user, token }, "User logged in successfully");
   } catch (err) {
-    console.log("Error during login", err);
+    console.log("Error during login:", err);
     return errorResponse(res, "Internal server error", 500);
   }
 };
+
 
 module.exports = {
   createUser,
