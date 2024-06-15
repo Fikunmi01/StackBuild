@@ -27,6 +27,11 @@
  *         usernameUpdates:
  *           type: integer
  *           description: Number of times the username has been updated
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
  */
 
 /**
@@ -41,6 +46,8 @@
  *         required: true
  *         schema:
  *           type: string
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       '200':
  *         description: User fetched successfully
@@ -66,6 +73,8 @@
  *         required: true
  *         schema:
  *           type: string
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -93,10 +102,12 @@
 
 /**
  * @swagger
- * /users/update:
+ * /user/update:
  *   put:
  *     summary: Update user details
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -128,3 +139,4 @@
  *       '500':
  *         description: Internal server error
  */
+
