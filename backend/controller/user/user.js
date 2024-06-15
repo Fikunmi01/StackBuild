@@ -81,18 +81,12 @@ const updateUser = async (req, res, next) => {
   const user = await UserModel.findById(_id);
 
   if (!user) {
-    return res.status(404).json({
-      status: 404,
-      message: "User not found",
-    });
+    return errorResponse(res, 'User not found', 400);
   }
 
   // Check if username update is allowed based on previous updates
   if (isUsernameUpdate && user.usernameUpdates >= 1) {
-    return res.status(403).json({
-      status: 403,
-      message: "Username can only be updated once",
-    });
+    return errorResponse(res, 'Username can only be updated once', 403);
   }
 
   // Prepare update data (exclude username if update not allowed)
@@ -114,7 +108,7 @@ const updateUser = async (req, res, next) => {
 
     return successResponse(res, updatedUser, "User updated successfully");
   } catch (err) {
-    console.error("Error updating user:", err);
+    console.log("Error updating user:", err);
     return errorResponse(res, "Internal server error", 500);
   }
 };
