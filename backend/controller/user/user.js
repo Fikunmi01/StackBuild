@@ -72,8 +72,6 @@ const updateUser = async (req, res, next) => {
 
   const _id = req.user.id;
 
-  console.log(_id, req.user);
-
   // Check if the user is trying to update the username
   const isUsernameUpdate = username !== undefined;
 
@@ -83,7 +81,7 @@ const updateUser = async (req, res, next) => {
   if (!user) {
     return errorResponse(res, 'User not found', 400);
   }
-  
+
 
   // Check if username update is allowed based on previous updates
   if (isUsernameUpdate && user.usernameUpdates >= 1) {
