@@ -9,15 +9,19 @@ export const Editor = () => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.post);
   const post = useSelector((state) => state.singlePost);
-  // console.log(post);
   const { postId } = useParams();
-  // console.log(postId)
 
   useEffect(() => {
-    // Fetch all posts when the component mounts
     dispatch(fetchPosts());
     dispatch(fetchSingle(postId));
-  }, []);
+  }, [dispatch, postId]);
+
+ // Updated loading condition to check for both posts and post loading states
+//  const isLoading = posts.loading || post.loading || !posts.post.length || !post.details;
+
+//  if (isLoading) {
+//    return <div className="w-full h-full flex justify-center items-center"><span class="loader"></span></div>;
+//  }
 
   return (
     <div className="pt-16 relative">
@@ -32,48 +36,45 @@ export const Editor = () => {
         />
       </div>
 
-      {posts.post.slice(0, 3).map((post) => {
-        return (
-          <div
-            className="flex flex-col-reverse px-4 md:flex-row md:items-center md:justify-center md:px-72 md:py-16 md:gap-10 relative mb-10 md:mb-0"
-            key={post.postId}
-          >
-            <div className="mt-10 md:mt-0">
-              <img src={post.imgSrc} alt="" />
-            </div>
-            <div className="md:w-3/5">
-              <h2 className="text-lg md:text-xl text-lightGray lead font-sans">
-                {post.tag}
-              </h2>
-              <h1 className="text-2xl md:text-3xl font-serif font-bold pb-2">
-                {post.title}
-              </h1>
-
-              <div className="flex flex-row gap-2 md:gap-4 items-center pb-2">
-                <p className="text-base text-lightGray font-sans font-normal">
-                  {post.author}
-                </p>
-                <img src="/assets/Ellipse1.png" alt="" />
-                <p className="text-base font-sans text-lightGray">
-                  {post.createdAt.slice(0, 10)}
-                </p>
-              </div>
-
-              <p className="text-base pb-2 font-sans font-normal text-[#000]">
-                {post.content}
-              </p>
-
-              <Link
-                className="font-serif border-solid border-[#00] border-b-2"
-                key={post.postId}
-                to={`/post/${post.postId}`}
-              >
-                Read more
-              </Link>
-            </div>
+      {posts.post.slice(0, 3).map((post) => (
+        <div
+          className="flex flex-col-reverse px-4 md:flex-row md:items-center md:justify-center md:px-72 md:py-16 md:gap-10 relative mb-10 md:mb-0"
+          key={post.postId}
+        >
+          <div className="mt-10 md:mt-0">
+            <img src={post.imgSrc} alt="" />
           </div>
-        );
-      })}
+          <div className="md:w-3/5">
+            <h2 className="text-lg md:text-xl text-lightGray lead font-sans">
+              {post.tag}
+            </h2>
+            <h1 className="text-2xl md:text-3xl font-serif font-bold pb-2">
+              {post.title}
+            </h1>
+
+            <div className="flex flex-row gap-2 md:gap-4 items-center pb-2">
+              <p className="text-base text-lightGray font-sans font-normal">
+                {post.author}
+              </p>
+              <img src="/assets/Ellipse1.png" alt="" />
+              <p className="text-base font-sans text-lightGray">
+                {post.createdAt.slice(0, 10)}
+              </p>
+            </div>
+
+            <p className="text-base pb-2 font-sans font-normal text-[#000]">
+              {post.content}
+            </p>
+
+            <Link
+              className="font-serif border-solid border-[#00] border-b-2"
+              to={`/post/${post.postId}`}
+            >
+              Read more
+            </Link>
+          </div>
+        </div>
+      ))}
 
       <div className="relative px-4 md:h-96 mb-20">
         <div className="md:absolute md:w-[38rem] bg-white md:right-16 md:py-20 md:px-16 z-10">
@@ -145,16 +146,13 @@ export const Editor = () => {
                 </p>
 
                 <Link
-                  className="font-serif border-solid border-[#00] border-b-2 "
-                  key={item.postId}
+                  className="font-serif border-solid border-[#00] border-b-2"
                   to={`/post/${item.postId}`}
                 >
                   Read more
                 </Link>
               </div>
             </div>
-
-            <div></div>
           </div>
         );
       })}

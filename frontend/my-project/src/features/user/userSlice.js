@@ -7,11 +7,11 @@ const initialState = {
     error: ''
 }
 
-export const fetchUser = createAsyncThunk('user/profile', async (_id, { rejectWithValue }) => {
+export const fetchUser = createAsyncThunk('user/profile', async (userId, { rejectWithValue }) => {
     const token = localStorage.getItem('token');
     console.log(id, 'id')
     try {
-        const response = await axios.get(`http://localhost:5000/user/profile/${_id}`, { headers: { 'x-auth-token': token } });
+        const response = await axios.get(`https://stackbuild.onrender.com/api/users/me/${userId}`, { headers: { 'x-auth-token': token } });
         conole.log(response.data)
         return response.data;
     } catch (error) {

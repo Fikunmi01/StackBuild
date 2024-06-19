@@ -17,18 +17,32 @@ export const Login = () => {
     e.preventDefault();
     dispatch(loginUser({ email, password, username }))
       .then((res) => {
-        console.log(res);
-        if (res.payload && res.payload.token) {
-          localStorage.setItem("token", res.payload.token);
-          alert(`You're successfully logged in.`);
-          navigate(`/user/login/${res.payload.username}`);
+        if (res.payload && res.payload.status === "success") {
+          const accessToken = res.payload.user?.data?.token?.accessToken;
+          const userId = res.payload.user?.data?.user?._id;
+
+          // Setting accessToken in localStorage
+          if (accessToken)
+            localStorage.setItem("accessToken", accessToken);
+
+          // Navigate to the user profile page with userId
+          if (userId) {
+            alert(`You're successfully logged in.`);
+            navigate(`/user/profile/${userId}`);
+          } else {
+            // Handle case where userId is undefined
+            navigate("/"); // Navigate to a default route or display an error message
+          }
         } else {
-          alert("Invalid Credentials");
+          // Handle non-success status or invalid credentials
+          alert(res.payload.message || "Invalid Credentials");
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        alert("An error occurred during login.");
+      });
   };
-
   return (
     <>
       <div>
@@ -99,9 +113,7 @@ export const Login = () => {
         </div>
 
         <div className="md:top-36 top-24 flex justify-between mx-4 relative">
-          <Link to='/user/create-account'>
-            Create account
-          </Link>
+          <Link to="/user/create-account">Create account</Link>
           <p>See screenlock page</p>
         </div>
       </div>
