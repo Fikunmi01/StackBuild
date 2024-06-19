@@ -83,6 +83,7 @@ const updateUser = async (req, res, next) => {
   if (!user) {
     return errorResponse(res, 'User not found', 400);
   }
+  
 
   // Check if username update is allowed based on previous updates
   if (isUsernameUpdate && user.usernameUpdates >= 1) {
