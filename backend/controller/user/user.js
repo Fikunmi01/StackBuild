@@ -72,6 +72,8 @@ const updateUser = async (req, res, next) => {
 
   const { firstName, lastName, email, phoneNumber, username } = req.body;
 
+  console.log(req.body);
+
   console.log(_id);
 
   // Check if the user is trying to update the username
@@ -79,6 +81,8 @@ const updateUser = async (req, res, next) => {
 
   // Fetch the user data
   const user = await UserModel.findById(_id);
+
+  console.log(user);
 
   if (!user) {
     return errorResponse(res, "User not found", 400);
