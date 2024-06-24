@@ -68,7 +68,7 @@ const uploadDP = async (req, res, next) => {
 };
 
 const updateUser = async (req, res, next) => {
-  const _id = req.params.userId;
+  const userId = req.params.userId;
   const allowedUpdates = ['firstName', 'lastName', 'email', 'phoneNumber', 'username'];
   const updateData = Object.keys(req.body).reduce((acc, key) => {
     if (allowedUpdates.includes(key) && req.body[key] !== undefined) {
@@ -77,9 +77,13 @@ const updateUser = async (req, res, next) => {
     return acc;
   }, {});
 
+  console.log(updateData)
+
   try {
     // Fetch the user data
-    const user = await UserModel.findById(_id);
+    const user = await UserModel.findById(userId);
+
+    console.log(user)
 
     if (!user) {
       return errorResponse(res, "User not found", 400);
