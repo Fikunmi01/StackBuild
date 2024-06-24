@@ -77,6 +77,8 @@ const updateUser = async (req, res, next) => {
     return acc;
   }, {});
 
+  console.log(req.body)
+
   console.log(updateData)
 
   try {
