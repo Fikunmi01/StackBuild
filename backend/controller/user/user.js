@@ -90,7 +90,7 @@ const updateUser = async (req, res, next) => {
     }
 
     // Update the user fields
-    const updatedUser = await UserModel.findByIdAndUpdate(_id, updateData, {
+    const updatedUser = await UserModel.findByIdAndUpdate(userId, updateData, {
       new: true,
     });
 
