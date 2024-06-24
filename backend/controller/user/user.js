@@ -68,11 +68,13 @@ const uploadDP = async (req, res, next) => {
 };
 
 const updateUser = async (req, res, next) => {
+  const _id = req.params.userId;
+
   const { firstName, lastName, email, phoneNumber, username } = req.body;
 
-  const _id = req.user.id;
+  console.log(req.body);
 
-  console.log(_id, req.user);
+  console.log(_id);
 
   // Check if the user is trying to update the username
   const isUsernameUpdate = username !== undefined;
@@ -80,13 +82,15 @@ const updateUser = async (req, res, next) => {
   // Fetch the user data
   const user = await UserModel.findById(_id);
 
+  console.log(user);
+
   if (!user) {
-    return errorResponse(res, 'User not found', 400);
+    return errorResponse(res, "User not found", 400);
   }
 
   // Check if username update is allowed based on previous updates
   if (isUsernameUpdate && user.usernameUpdates >= 1) {
-    return errorResponse(res, 'Username can only be updated once', 403);
+    return errorResponse(res, "Username can only be updated once", 403);
   }
 
   // Prepare update data (exclude username if update not allowed)
@@ -105,6 +109,8 @@ const updateUser = async (req, res, next) => {
     const updatedUser = await UserModel.findByIdAndUpdate(_id, updateData, {
       new: true,
     });
+
+    console.log(updatedUser);
 
     return successResponse(res, updatedUser, "User updated successfully");
   } catch (err) {
