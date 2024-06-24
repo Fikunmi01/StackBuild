@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { searchPost } from "../features/searchSlice";
+import { unwrapResult } from '@reduxjs/toolkit';
 
 export const Navbar = () => {
   const dispatch = useDispatch();
@@ -92,7 +93,7 @@ export const Navbar = () => {
             {isAuthenticated && <img src="/assets/bell.png" alt="" />}
 
             {isAuthenticated && (
-              <Link to="/profile">
+              <Link to="/profile/">
                 <img src="/assets/user 1.png" alt="" />
               </Link>
             )}

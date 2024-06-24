@@ -16,7 +16,7 @@ function App() {
         <Route path="/post/:postId" element={<SinglePost />} />
         <Route path="/search" element={<Search />} />
         <Route path="/user/login" element={<Login />} />
-        <Route path="/user/login/:username" element={<Homepage />} />
+        <Route path="/user/profile/:id" element={<Homepage />} />
         <Route path="/user/create-account" element={<CreateAcc />} />
         <Route path="/welcome" element={<Welcome/>}/>
         <Route path="/profile" element={<Profile/>}/>
