@@ -102,7 +102,7 @@
 
 /**
  * @swagger
- * /:userId/update:
+ * /{userId}/update:
  *   patch:
  *     summary: Update user details
  *     tags: [Users]
