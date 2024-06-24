@@ -17,6 +17,6 @@ const store = configureStore({
         create: accountSlice,
         update: updateSlice
     }
-})
+})  
 
 export default store;

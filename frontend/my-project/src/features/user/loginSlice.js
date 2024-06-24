@@ -3,11 +3,11 @@ import axios from "axios"
 
 const initialState = {
     loading: false,
-    user: [],
-    userProfile:[],
+    user: {}, // Changed from an array to an object
+    userProfile: {},
     error: '',
     isAuthenticated: false,
-}
+};
 
 export const loginUser = createAsyncThunk('login/user', async ({ email, password, username }) => {
     try {

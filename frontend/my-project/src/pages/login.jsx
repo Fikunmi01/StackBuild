@@ -3,40 +3,43 @@ import { Navbar } from "../components/navbar";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../features/user/loginSlice";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 export const Login = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.user?.data ?? {});
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { username } = useParams();
 
   const navigate = useNavigate();
+  // const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
+  // console.log(user);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(loginUser({ email, password, username }))
+      .then(unwrapResult) // This ensures we're working with the action payload directly
       .then((res) => {
-        if (res.payload && res.payload.status === "success") {
-          const accessToken = res.payload.user?.data?.token?.accessToken;
-          const userId = res.payload.user?.data?.user?._id;
+        // Now, res directly contains the payload
+        const accessToken = res.data.token?.accessToken;
+        const userId = res.data.user?._id;
 
-          // Setting accessToken in localStorage
-          if (accessToken)
-            localStorage.setItem("accessToken", accessToken);
-
-          // Navigate to the user profile page with userId
-          if (userId) {
-            alert(`You're successfully logged in.`);
-            navigate(`/user/profile/${userId}`);
-          } else {
-            // Handle case where userId is undefined
-            navigate("/"); // Navigate to a default route or display an error message
-          }
-        } else {
-          // Handle non-success status or invalid credentials
-          alert(res.payload.message || "Invalid Credentials");
+        if (accessToken) {
+          localStorage.setItem("accessToken", accessToken);
+          localStorage.setItem("userId", userId);
         }
+        if (userId) {
+          alert(`You're successfully logged in.`);
+          navigate(`/user/profile/${userId}`);
+        } else {
+          // Handle case where userId is undefined
+          navigate(`/`);
+        }
+        console.log("token ", accessToken);
+        console.log("iddd ", userId);
+        console.log("user two", res);
       })
       .catch((err) => {
         console.log(err);

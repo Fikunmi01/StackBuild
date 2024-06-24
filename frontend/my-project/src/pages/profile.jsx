@@ -2,18 +2,26 @@ import React, { useState } from "react";
 import { Navbar } from "../components/navbar";
 import { useSelector, useDispatch } from "react-redux";
 import { updateUser } from "../features/user/updateSlice";
+
 import { useParams } from "react-router-dom";
 
 export const Profile = () => {
-  const userProfile = useSelector((state) => state.user.user?.data?.user ?? {});
-
+  const userProfile = useSelector((state) => state.user.user?.data ?? {});
   const dispatch = useDispatch();
 
-  // State variables to hold the edited values, with default values to avoid undefined
-  const [editedFirstName, setEditedFirstName] = useState(userProfile.firstName ?? '');
-  const [editedLastName, setEditedLastName] = useState(userProfile.lastName ?? '');
-  const [editedEmail, setEditedEmail] = useState(userProfile.email ?? '');
-  const [editedUsername, setEditedUsername] = useState(userProfile.username ?? '');
+  // State variables for edited values
+  const [editedFirstName, setEditedFirstName] = useState(
+    userProfile.user.firstName ?? ""
+  );
+  const [editedLastName, setEditedLastName] = useState(
+    userProfile.user.lastName ?? ""
+  );
+  const [editedEmail, setEditedEmail] = useState(userProfile.user.email ?? "");
+
+  // State variables to track if a field has been edited
+  const [firstNameEdited, setFirstNameEdited] = useState(false);
+  const [lastNameEdited, setLastNameEdited] = useState(false);
+  const [emailEdited, setEmailEdited] = useState(false);
 
   // State variable to track edit mode
   const [editMode, setEditMode] = useState(false);
@@ -23,43 +31,54 @@ export const Profile = () => {
     switch (field) {
       case "firstName":
         setEditedFirstName(value);
+        setFirstNameEdited(true);
         break;
       case "lastName":
         setEditedLastName(value);
+        setLastNameEdited(true);
         break;
       case "email":
         setEditedEmail(value);
-        break;
-      case "username":
-        setEditedUsername(value);
+        setEmailEdited(true);
         break;
       default:
         break;
     }
   };
 
-  // Function to handle "Edit" button click
   const handleEditClick = () => {
     setEditMode(true);
   };
 
-  // Function to handle "Save" button click
-  const handleSaveClick = () => {
-    const updateData = {
-      firstName: editedFirstName,
-      lastName: editedLastName,
-      email: editedEmail,
-      username: editedUsername,
-    };
 
-    try {
-      dispatch(updateUser({
-        id: userProfile.id,
-        userData: updateData,
-      }));
-      setEditMode(false); // Switch back to view mode after saving
-    } catch (error) {
-      console.error(error);
+  const handleSaveClick = () => {
+    const updateData = {};
+    if (firstNameEdited) updateData.firstName = editedFirstName;
+    if (lastNameEdited) updateData.lastName = editedLastName;
+    if (emailEdited) updateData.email = editedEmail;
+  
+    // Only proceed if there's something to update
+    if (Object.keys(updateData).length > 0) {
+      const accessToken = localStorage.getItem("accessToken");
+      const userId = localStorage.getItem("userId");
+      dispatch(
+        updateUser({ id: userId, userData: updateData, token: accessToken })
+      )
+        .unwrap()
+        .then((res) => {
+          if (res && res.status === "success") {
+            setEditMode(false); // Exit edit mode on success
+            // Reset edited flags
+            setFirstNameEdited(false);
+            setLastNameEdited(false);
+            setEmailEdited(false);
+          } else {
+            console.error("Unexpected response structure or status:", res);
+          }
+        })
+        .catch((error) => {
+          console.error("Update failed:", error);
+        });
     }
   };
 
@@ -106,7 +125,9 @@ export const Profile = () => {
                   Firstname:
                 </label>
                 <input
-                  value={editMode ? editedFirstName : userProfile.firstName}
+                  value={
+                    editMode ? editedFirstName : userProfile?.user?.firstName
+                  }
                   onChange={(e) =>
                     handleInputChange("firstName", e.target.value)
                   }
@@ -123,7 +144,9 @@ export const Profile = () => {
                   Last name:
                 </label>
                 <input
-                  value={editMode ? editedLastName : userProfile.lastName}
+                  value={
+                    editMode ? editedLastName : userProfile?.user?.lastName
+                  }
                   onChange={(e) =>
                     handleInputChange("lastName", e.target.value)
                   }
@@ -142,7 +165,7 @@ export const Profile = () => {
                   Email:
                 </label>
                 <input
-                  value={editMode ? editedEmail : userProfile.email}
+                  value={editMode ? editedEmail : userProfile?.user?.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   readOnly={!editMode}
                   className="h-10 outline-none text-lg font-sans"
@@ -157,7 +180,11 @@ export const Profile = () => {
                   Date Joined:
                 </label>
                 <input
-                  value={userProfile.dateJoined ? userProfile.dateJoined.slice(0, 10) : ''}
+                  value={
+                    userProfile?.user?.dateJoined
+                      ? userProfile?.user?.dateJoined.slice(0, 10)
+                      : ""
+                  }
                   readOnly
                   className="h-10 outline-none text-lg font-sans"
                 />
@@ -173,11 +200,10 @@ export const Profile = () => {
                   Username:
                 </label>
                 <input
-                  value={editMode ? editedUsername : userProfile.username}
-                  onChange={(e) =>
-                    handleInputChange("username", e.target.value)
-                  }
-                  readOnly={!editMode}
+                  id="username"
+                  type="text"
+                  value={userProfile?.user?.username}
+                  readOnly={true}
                   className="h-10 outline-none text-lg font-sans"
                 />
               </span>
