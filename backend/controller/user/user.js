@@ -69,48 +69,26 @@ const uploadDP = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
   const _id = req.params.userId;
-
-  const { firstName, lastName, email, phoneNumber, username } = req.body;
-
-  console.log(req.body);
-
-  console.log(_id);
-
-  // Check if the user is trying to update the username
-  const isUsernameUpdate = username !== undefined;
-
-  // Fetch the user data
-  const user = await UserModel.findById(_id);
-
-  console.log(user);
-
-  if (!user) {
-    return errorResponse(res, "User not found", 400);
-  }
-
-  // Check if username update is allowed based on previous updates
-  if (isUsernameUpdate && user.usernameUpdates >= 1) {
-    return errorResponse(res, "Username can only be updated once", 403);
-  }
-
-  // Prepare update data (exclude username if update not allowed)
-  const updateData = {
-    firstName,
-    lastName,
-    email,
-    phoneNumber,
-  };
-  if (isUsernameUpdate) {
-    updateData.username = username;
-    user.usernameUpdates++; // Increment username update count
-  }
+  const allowedUpdates = ['firstName', 'lastName', 'email', 'phoneNumber', 'username'];
+  const updateData = Object.keys(req.body).reduce((acc, key) => {
+    if (allowedUpdates.includes(key) && req.body[key] !== undefined) {
+      acc[key] = req.body[key];
+    }
+    return acc;
+  }, {});
 
   try {
+    // Fetch the user data
+    const user = await UserModel.findById(_id);
+
+    if (!user) {
+      return errorResponse(res, "User not found", 400);
+    }
+
+    // Update the user fields
     const updatedUser = await UserModel.findByIdAndUpdate(_id, updateData, {
       new: true,
     });
-
-    console.log(updatedUser);
 
     return successResponse(res, updatedUser, "User updated successfully");
   } catch (err) {
