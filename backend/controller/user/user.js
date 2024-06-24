@@ -68,35 +68,35 @@ const uploadDP = async (req, res, next) => {
 };
 
 const updateUser = async (req, res, next) => {
-  const userId = req.params.userId;
-  const allowedUpdates = ['firstName', 'lastName', 'email', 'phoneNumber', 'username'];
-  const updateData = Object.keys(req.body).reduce((acc, key) => {
-    if (allowedUpdates.includes(key) && req.body[key] !== undefined) {
-      acc[key] = req.body[key];
-    }
-    return acc;
-  }, {});
-
-  console.log(req.body)
-
-  console.log(updateData)
-
+  const _id = req.params.userId;
+  console.log(req.body);
   try {
-    // Fetch the user data
-    const user = await UserModel.findById(userId);
-
-    console.log(user)
+    const user = await UserModel.findByIdAndUpdate(
+      _id,
+      {
+        $set: req.body,
+      },
+      { new: true }
+    );
 
     if (!user) {
-      return errorResponse(res, "User not found", 400);
+      return errorResponse(res, "User not found", 404);
     }
 
-    // Update the user fields
-    const updatedUser = await UserModel.findByIdAndUpdate(userId, updateData, {
-      new: true,
-    });
+    console.log(user);
 
-    return successResponse(res, updatedUser, "User updated successfully");
+    if (Object.keys(req.body).length === 0) {
+      return errorResponse(res, "Enter valid data", 404);
+    }
+    // Check if email || username is taken
+    const usernameOrEmailExists = await UserModel.findOne({
+      $or: [{ username: req.body.username }, { email: req.body.email }],
+    });
+    if (usernameOrEmailExists) {
+      return errorResponse(res, "Username/email exists", 400);
+    }
+
+    return successResponse(res, user, "User updated successfully");
   } catch (err) {
     console.log("Error updating user:", err);
     return errorResponse(res, "Internal server error", 500);
