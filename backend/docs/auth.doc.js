@@ -64,7 +64,7 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/AuthUser'
+ *             $ref: '#/components/schemas/User'
  *     responses:
  *       '200':
  *         description: User logged in successfully

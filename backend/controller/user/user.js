@@ -69,50 +69,34 @@ const uploadDP = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
   const _id = req.params.userId;
-
-  const { firstName, lastName, email, phoneNumber, username } = req.body;
-
   console.log(req.body);
-
-  console.log(_id);
-
-  // Check if the user is trying to update the username
-  const isUsernameUpdate = username !== undefined;
-
-  // Fetch the user data
-  const user = await UserModel.findById(_id);
-
-  console.log(user);
-
-  if (!user) {
-    return errorResponse(res, "User not found", 400);
-  }
-
-  // Check if username update is allowed based on previous updates
-  if (isUsernameUpdate && user.usernameUpdates >= 1) {
-    return errorResponse(res, "Username can only be updated once", 403);
-  }
-
-  // Prepare update data (exclude username if update not allowed)
-  const updateData = {
-    firstName,
-    lastName,
-    email,
-    phoneNumber,
-  };
-  if (isUsernameUpdate) {
-    updateData.username = username;
-    user.usernameUpdates++; // Increment username update count
-  }
-
   try {
-    const updatedUser = await UserModel.findByIdAndUpdate(_id, updateData, {
-      new: true,
+    const user = await UserModel.findByIdAndUpdate(
+      _id,
+      {
+        $set: req.body,
+      },
+      { new: true }
+    );
+
+    if (!user) {
+      return errorResponse(res, "User not found", 404);
+    }
+
+    console.log(user);
+
+    if (Object.keys(req.body).length === 0) {
+      return errorResponse(res, "Enter valid data", 404);
+    }
+    // Check if email || username is taken
+    const usernameOrEmailExists = await UserModel.findOne({
+      $or: [{ username: req.body.username }, { email: req.body.email }],
     });
+    if (usernameOrEmailExists) {
+      return errorResponse(res, "Username/email exists", 400);
+    }
 
-    console.log(updatedUser);
-
-    return successResponse(res, updatedUser, "User updated successfully");
+    return successResponse(res, user, "User updated successfully");
   } catch (err) {
     console.log("Error updating user:", err);
     return errorResponse(res, "Internal server error", 500);

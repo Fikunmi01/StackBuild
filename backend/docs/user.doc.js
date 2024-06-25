@@ -102,10 +102,16 @@
 
 /**
  * @swagger
- * /user/update:
+ * /user/{userId}/update:
  *   patch:
  *     summary: Update user details
  *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
  *     security:
  *       - bearerAuth: []
  *     requestBody:
