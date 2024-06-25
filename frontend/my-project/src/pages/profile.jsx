@@ -1,15 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navbar } from "../components/navbar";
 import { useSelector, useDispatch } from "react-redux";
 import { updateUser } from "../features/user/updateSlice";
-
-import { useParams } from "react-router-dom";
 
 export const Profile = () => {
   const userProfile = useSelector((state) => state.user.user?.data ?? {});
   const dispatch = useDispatch();
 
-  // State variables for edited values
   const [editedFirstName, setEditedFirstName] = useState(
     userProfile.user.firstName ?? ""
   );
@@ -17,16 +14,57 @@ export const Profile = () => {
     userProfile.user.lastName ?? ""
   );
   const [editedEmail, setEditedEmail] = useState(userProfile.user.email ?? "");
+  const [editedUsername, setEditedUsername] = useState(
+    userProfile.user.username ?? ""
+  );
 
-  // State variables to track if a field has been edited
   const [firstNameEdited, setFirstNameEdited] = useState(false);
   const [lastNameEdited, setLastNameEdited] = useState(false);
   const [emailEdited, setEmailEdited] = useState(false);
+  const [usernameEdited, setUsernameEdited] = useState(false);
 
-  // State variable to track edit mode
   const [editMode, setEditMode] = useState(false);
+  const [saveRequested, setSaveRequested] = useState(false);
+  const [fetchUserRequested, setFetchUserRequested] = useState(false);
 
-  // Function to handle changes in input fields
+  useEffect(() => {
+    if (saveRequested) {
+      dispatch(
+        updateUser({
+          ...(firstNameEdited && { firstName: editedFirstName }),
+          ...(lastNameEdited && { lastName: editedLastName }),
+          ...(emailEdited && { email: editedEmail }),
+          ...(usernameEdited && { email: editedUsername }),
+        })
+      )
+        .unwrap()
+        .then((res) => {
+          if (res && res.status === "success") {
+            console.log("Update Success:", res);
+            setEditMode(false);
+            setSaveRequested(false);
+          } else {
+            console.error("Unexpected response structure or status:", res);
+          }
+        })
+        .catch((error) => {
+          console.error("Update failed:", error);
+          setSaveRequested(false);
+        });
+    }
+  }, [
+    saveRequested,
+    firstNameEdited,
+    lastNameEdited,
+    emailEdited,
+    usernameEdited,
+    editedFirstName,
+    editedLastName,
+    editedEmail,
+    editedUsername,
+    dispatch,
+  ]);
+
   const handleInputChange = (field, value) => {
     switch (field) {
       case "firstName":
@@ -41,6 +79,10 @@ export const Profile = () => {
         setEditedEmail(value);
         setEmailEdited(true);
         break;
+      case "username":
+        setEditedUsername(value);
+        setUsernameEdited(true);
+        break;
       default:
         break;
     }
@@ -50,36 +92,8 @@ export const Profile = () => {
     setEditMode(true);
   };
 
-
   const handleSaveClick = () => {
-    const updateData = {};
-    if (firstNameEdited) updateData.firstName = editedFirstName;
-    if (lastNameEdited) updateData.lastName = editedLastName;
-    if (emailEdited) updateData.email = editedEmail;
-  
-    // Only proceed if there's something to update
-    if (Object.keys(updateData).length > 0) {
-      const accessToken = localStorage.getItem("accessToken");
-      const userId = localStorage.getItem("userId");
-      dispatch(
-        updateUser({ id: userId, userData: updateData, token: accessToken })
-      )
-        .unwrap()
-        .then((res) => {
-          if (res && res.status === "success") {
-            setEditMode(false); // Exit edit mode on success
-            // Reset edited flags
-            setFirstNameEdited(false);
-            setLastNameEdited(false);
-            setEmailEdited(false);
-          } else {
-            console.error("Unexpected response structure or status:", res);
-          }
-        })
-        .catch((error) => {
-          console.error("Update failed:", error);
-        });
-    }
+    setSaveRequested(true); // Now, this triggers the useEffect for saving
   };
 
   return (
@@ -126,7 +140,9 @@ export const Profile = () => {
                 </label>
                 <input
                   value={
-                    editMode ? editedFirstName : userProfile?.user?.firstName
+                    firstNameEdited
+                      ? editedFirstName
+                      : userProfile?.user?.firstName ?? ""
                   }
                   onChange={(e) =>
                     handleInputChange("firstName", e.target.value)
@@ -145,7 +161,9 @@ export const Profile = () => {
                 </label>
                 <input
                   value={
-                    editMode ? editedLastName : userProfile?.user?.lastName
+                    lastNameEdited
+                      ? editedLastName
+                      : userProfile?.user?.lastName ?? ""
                   }
                   onChange={(e) =>
                     handleInputChange("lastName", e.target.value)
@@ -165,7 +183,9 @@ export const Profile = () => {
                   Email:
                 </label>
                 <input
-                  value={editMode ? editedEmail : userProfile?.user?.email}
+                  value={
+                    emailEdited ? editedEmail : userProfile?.user?.email ?? ""
+                  }
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   readOnly={!editMode}
                   className="h-10 outline-none text-lg font-sans"
@@ -202,8 +222,15 @@ export const Profile = () => {
                 <input
                   id="username"
                   type="text"
-                  value={userProfile?.user?.username}
-                  readOnly={true}
+                  value={
+                    usernameEdited
+                      ? editedUsername
+                      : userProfile?.user?.username ?? ""
+                  }
+                  onChange={(e) =>
+                    handleInputChange("username", e.target.value)
+                  }
+                  readOnly={!editMode}
                   className="h-10 outline-none text-lg font-sans"
                 />
               </span>
