@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Navbar } from "../components/navbar";
 import { useSelector, useDispatch } from "react-redux";
 import { updateUser } from "../features/user/updateSlice";
+import { updateProfilePicture } from "../features/user/userSlice";
 
 export const Profile = () => {
   const userProfile = useSelector((state) => state.user.user?.data ?? {});
@@ -17,43 +18,65 @@ export const Profile = () => {
   const [editedUsername, setEditedUsername] = useState(
     userProfile.user.username ?? ""
   );
+  const [editedImgSrc, setEditedImgSrc] = useState(userProfile.imgSrc ?? "");
 
   const [firstNameEdited, setFirstNameEdited] = useState(false);
   const [lastNameEdited, setLastNameEdited] = useState(false);
   const [emailEdited, setEmailEdited] = useState(false);
   const [usernameEdited, setUsernameEdited] = useState(false);
+  const [imageEdited, setImageEdited] = useState(false);
 
   const [editMode, setEditMode] = useState(false);
   const [saveRequested, setSaveRequested] = useState(false);
-  const [fetchUserRequested, setFetchUserRequested] = useState(false);
 
   useEffect(() => {
     if (saveRequested) {
-      dispatch(
-        updateUser({
-          ...(firstNameEdited && { firstName: editedFirstName }),
-          ...(lastNameEdited && { lastName: editedLastName }),
-          ...(emailEdited && { email: editedEmail }),
-          ...(usernameEdited && { email: editedUsername }),
-        })
-      )
-        .unwrap()
-        .then((res) => {
-          if (res && res.status === "success") {
-            console.log("Update Success:", res);
+      if (imageEdited) {
+        dispatch(updateProfilePicture({ imgSrc: editedImgSrc }))
+          .unwrap()
+          .then((res) => {
+            if (res && res.status === "success") {
+              console.log("Image Update Success:", res);
+            } else {
+              console.error("Unexpected response structure or status:", res);
+            }
+          })
+          .catch((error) => {
+            console.error("Image Update failed:", error);
+          })
+          .finally(() => {
+            // setSaveRequested(false);
             setEditMode(false);
+          });
+      } else if (firstNameEdited || lastNameEdited || emailEdited || usernameEdited) {
+        dispatch(
+          updateUser({
+            ...(firstNameEdited && { firstName: editedFirstName }),
+            ...(lastNameEdited && { lastName: editedLastName }),
+            ...(emailEdited && { email: editedEmail }),
+            ...(usernameEdited && { username: editedUsername }), // Fixed key from 'email' to 'username'
+          })
+        )
+          .unwrap()
+          .then((res) => {
+            if (res && res.status === "success") {
+              console.log("Profile Update Success:", res);
+            } else {
+              console.error("Unexpected response structure or status:", res);
+            }
+          })
+          .catch((error) => {
+            console.error("Profile Update failed:", error);
+          })
+          .finally(() => {
             setSaveRequested(false);
-          } else {
-            console.error("Unexpected response structure or status:", res);
-          }
-        })
-        .catch((error) => {
-          console.error("Update failed:", error);
-          setSaveRequested(false);
-        });
+            setEditMode(false);
+          });
+      }
     }
   }, [
     saveRequested,
+    imageEdited,
     firstNameEdited,
     lastNameEdited,
     emailEdited,
@@ -62,6 +85,7 @@ export const Profile = () => {
     editedLastName,
     editedEmail,
     editedUsername,
+    editedImgSrc,
     dispatch,
   ]);
 
@@ -88,6 +112,18 @@ export const Profile = () => {
     }
   };
 
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditedImgSrc(reader.result.toString());
+        setImageEdited(true);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleEditClick = () => {
     setEditMode(true);
   };
@@ -106,11 +142,21 @@ export const Profile = () => {
 
         <div className="flex gap-10">
           <div>
-            <img
-              src={userProfile.imgSrc}
-              className="w-96 h-96 object-fill"
-              alt=""
-            />
+            <div className="relative">
+              <img
+                src={editedImgSrc || "assets/uploadIcon.png"} // Replace 'path/to/default/image.jpg' with the path to a default image
+                alt="Profile"
+                className="w-96 h-96 object-cover" // Adjust width (w-96) and height (h-96) as needed
+              />
+              {editMode && (
+                <input
+                  type="file"
+                  className="mt-4   " // Position the file input as needed
+                  onChange={handleImageChange}
+                  alt=""
+                />
+              )}
+            </div>
 
             {editMode ? (
               <button

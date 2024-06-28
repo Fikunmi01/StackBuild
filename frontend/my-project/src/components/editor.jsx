@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchPosts } from "../features/post/postSlice";
 import { Link, useParams } from "react-router-dom";
@@ -11,17 +11,29 @@ export const Editor = () => {
   const post = useSelector((state) => state.singlePost);
   const { postId } = useParams();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => setIsModalOpen(true);
+  const hideModal = () => setIsModalOpen(false);
+
+  // Function to handle form submission
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Process form data here
+    hideModal(); // Close modal after submission
+  };
+
   useEffect(() => {
     dispatch(fetchPosts());
     dispatch(fetchSingle(postId));
   }, [dispatch, postId]);
 
- // Updated loading condition to check for both posts and post loading states
-//  const isLoading = posts.loading || post.loading || !posts.post.length || !post.details;
+  // Updated loading condition to check for both posts and post loading states
+  //  const isLoading = posts.loading || post.loading || !posts.post.length || !post.details;
 
-//  if (isLoading) {
-//    return <div className="w-full h-full flex justify-center items-center"><span class="loader"></span></div>;
-//  }
+  //  if (isLoading) {
+  //    return <div className="w-full h-full flex justify-center items-center"><span class="loader"></span></div>;
+  //  }
 
   return (
     <div className="pt-16 relative">
@@ -110,7 +122,7 @@ export const Editor = () => {
           className="md:absolute h-60 md:h-full mt-4 md:mb-0"
         />
       </div>
-
+   
       {posts.post.slice(3, 7).map((item, index) => {
         const startIndex = posts.post.length;
         return (
@@ -120,7 +132,7 @@ export const Editor = () => {
           >
             <div className="flex relative flex-col md:flex-row md:items-center md:justify-center md:px-48 md:py-16 md:gap-10 mb-10">
               <div>
-                <img src={item.imgSrc} alt="" className="w-full"/>
+                <img src={item.imgSrc} alt="" className="w-full" />
               </div>
 
               <div className="w-full">
@@ -137,7 +149,7 @@ export const Editor = () => {
                   </p>
                   <img src="/assets/Ellipse1.png" alt="" />
                   <p className="text-base font-sans text-lightGray">
-                    {item.createdAt.slice(0,10)}
+                    {item.createdAt.slice(0, 10)}
                   </p>
                 </div>
 
@@ -159,3 +171,30 @@ export const Editor = () => {
     </div>
   );
 };
+
+
+
+
+// <button onClick={showModal} className=" border-solid border-2 px-4 py-2">
+// Create Post
+// </button>
+// {isModalOpen && (
+// <div className="modal bg-red-900">
+//   <div className="modal-content">
+//     <span className="close" onClick={hideModal}>
+//       &times;
+//     </span>
+//     <form onSubmit={handleSubmit}>
+//       <label>
+//         Title:
+//         {/*  */} <input type="text" name="title" />
+//       </label>
+//       <label>
+//         Content:
+//         <textarea name="content" />
+//       </label>
+//       <button type="submit">Submit</button>
+//     </form>
+//   </div>
+// </div>
+// )}
