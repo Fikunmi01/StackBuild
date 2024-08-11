@@ -33,33 +33,65 @@ const createPost = async (req, res, next) => {
 const getSinglePost = async (req, res, next) => {
   try {
     const postId = req.params.postId;
+    const searchQuery = req.query.search;
 
-    // Fetch the post by postId from your database using the PostModel
-    const post = await PostModel.find({ postId: postId });
+    let post;
+
+    if (searchQuery) {
+      const regex = new RegExp(searchQuery, 'i');
+      post = await PostModel.findOne({
+        _id: postId,
+        $or: [
+          { title: regex },
+          { content: regex },
+          { tag: regex },
+          { author: regex },
+          { 'comments.text': regex }
+        ]
+      });
+    } else {
+      post = await PostModel.findById(postId); 
+    }
 
     if (!post) {
-      // If the post with the given postId doesn't exist, return a 404 error
       return res.status(404).json({ error: "Post not found" });
     }
 
-    // Send the retrieved post data as a response
     res.json(post);
   } catch (error) {
-    // Handle any errors that may occur during the database query
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
 
+
 const getPosts = async (req, res, next) => {
   try {
-    const posts = await PostModel.find(); // Retrieve all posts from the database
+    const searchQuery = req.query.search;
+
+    let filter = {};
+
+    if (searchQuery) {
+      const regex = new RegExp(searchQuery, 'i'); 
+      filter = {
+        $or: [
+          { title: regex },
+          { content: regex },
+          { tag: regex },
+          { comments: { $elemMatch: { text: regex } } }, 
+          { imgSrc: regex }
+        ]
+      };
+    }
+
+    const posts = await PostModel.find(filter); 
     res.status(200).json(posts);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "An error occurred while fetching posts" });
   }
 };
+
 
 // Define a route to search for posts
 const searchPost = async (req, res, next) => {
