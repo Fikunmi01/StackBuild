@@ -58,7 +58,7 @@
  *                 type: string
  *               author:
  *                 type: string
- *      security:
+ *     security:
  *       - bearerAuth: []
  *     responses:
  *       '201':
@@ -127,7 +127,7 @@
  *         required: true
  *         schema:
  *           type: string
-  *     security:
+ *     security:
  *       - bearerAuth: []
  *     requestBody:
  *       required: true
@@ -167,7 +167,7 @@
  *         required: true
  *         schema:
  *           type: string
-  *     security:
+ *     security:
  *       - bearerAuth: []
  *     responses:
  *       '200':
