@@ -75,7 +75,7 @@
  * @swagger
  * /posts/{postId}:
  *   get:
- *     summary: Get a single post by ID
+ *     summary: Get a single post by ID, with optional search filter
  *     tags: [Posts]
  *     parameters:
  *       - in: path
@@ -83,6 +83,11 @@
  *         required: true
  *         schema:
  *           type: string
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search query to filter fields in the post
  *     responses:
  *       '200':
  *         description: Post retrieved successfully
@@ -100,8 +105,14 @@
  * @swagger
  * /posts:
  *   get:
- *     summary: Get all posts
+ *     summary: Get all posts, with optional search filter
  *     tags: [Posts]
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search query to filter posts by title, content, tag, author, or comments
  *     responses:
  *       '200':
  *         description: Posts retrieved successfully
