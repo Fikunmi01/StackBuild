@@ -1,16 +1,12 @@
-// config/env.js
+PORT = '5001'
+NODE_ENV = 'production'
+MONGODB_PROD_URI = 'mongodb+srv://3FK5:qe1J9VDbPAhyrUew@cluster0.b0ladgi.mongodb.net/qe1J9VDbPAhyrUew'
+MONGODB_DEV_URI = 'mongodb://127.0.0.1:27017/stackbuild'
+SECRET_KEY = 'secret'
 
-// This configuration file contains sensitive information.
-// Ensure that it is added to .gitignore to prevent accidental exposure.
-require('dotenv').config();
+JWT_SECRET = 'QWERTYUIOPASDFGHJKLZXCVBNM'
 
-const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
-const CLOUDINARY_SECRET_KEY = process.env.CLOUDINARY_SECRET_KEY;
-const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
-
-module.exports = {
-  CLOUDINARY_API_KEY,
-  CLOUDINARY_SECRET_KEY,
-  CLOUDINARY_CLOUD_NAME,
-  };
-  
+// Cloudinary
+CLOUDINARY_CLOUD_NAME = 'dey2bqr6r'
+CLOUDINARY_API_KEY = '767442957122513'
+CLOUDINARY_SECRET_KEY = 'FL4elck71mu3dYLNLiHTy4CZcbM'

@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navbar } from "../components/navbar";
 import { useSelector, useDispatch } from "react-redux";
 import { updateUser } from "../features/user/updateSlice";
-
-import { useParams } from "react-router-dom";
+import { updateProfilePicture } from "../features/user/userSlice";
 
 export const Profile = () => {
   const userProfile = useSelector((state) => state.user.user?.data ?? {});
   const dispatch = useDispatch();
 
-  // State variables for edited values
   const [editedFirstName, setEditedFirstName] = useState(
     userProfile.user.firstName ?? ""
   );
@@ -17,16 +15,80 @@ export const Profile = () => {
     userProfile.user.lastName ?? ""
   );
   const [editedEmail, setEditedEmail] = useState(userProfile.user.email ?? "");
+  const [editedUsername, setEditedUsername] = useState(
+    userProfile.user.username ?? ""
+  );
+  const [editedImgSrc, setEditedImgSrc] = useState(userProfile.imgSrc ?? "");
 
-  // State variables to track if a field has been edited
   const [firstNameEdited, setFirstNameEdited] = useState(false);
   const [lastNameEdited, setLastNameEdited] = useState(false);
   const [emailEdited, setEmailEdited] = useState(false);
+  const [usernameEdited, setUsernameEdited] = useState(false);
+  const [imageEdited, setImageEdited] = useState(false);
 
-  // State variable to track edit mode
   const [editMode, setEditMode] = useState(false);
+  const [saveRequested, setSaveRequested] = useState(false);
 
-  // Function to handle changes in input fields
+  useEffect(() => {
+    if (saveRequested) {
+      if (imageEdited) {
+        dispatch(updateProfilePicture({ imgSrc: editedImgSrc }))
+          .unwrap()
+          .then((res) => {
+            if (res && res.status === "success") {
+              console.log("Image Update Success:", res);
+            } else {
+              console.error("Unexpected response structure or status:", res);
+            }
+          })
+          .catch((error) => {
+            console.error("Image Update failed:", error);
+          })
+          .finally(() => {
+            // setSaveRequested(false);
+            setEditMode(false);
+          });
+      } else if (firstNameEdited || lastNameEdited || emailEdited || usernameEdited) {
+        dispatch(
+          updateUser({
+            ...(firstNameEdited && { firstName: editedFirstName }),
+            ...(lastNameEdited && { lastName: editedLastName }),
+            ...(emailEdited && { email: editedEmail }),
+            ...(usernameEdited && { username: editedUsername }), // Fixed key from 'email' to 'username'
+          })
+        )
+          .unwrap()
+          .then((res) => {
+            if (res && res.status === "success") {
+              console.log("Profile Update Success:", res);
+            } else {
+              console.error("Unexpected response structure or status:", res);
+            }
+          })
+          .catch((error) => {
+            console.error("Profile Update failed:", error);
+          })
+          .finally(() => {
+            setSaveRequested(false);
+            setEditMode(false);
+          });
+      }
+    }
+  }, [
+    saveRequested,
+    imageEdited,
+    firstNameEdited,
+    lastNameEdited,
+    emailEdited,
+    usernameEdited,
+    editedFirstName,
+    editedLastName,
+    editedEmail,
+    editedUsername,
+    editedImgSrc,
+    dispatch,
+  ]);
+
   const handleInputChange = (field, value) => {
     switch (field) {
       case "firstName":
@@ -41,8 +103,24 @@ export const Profile = () => {
         setEditedEmail(value);
         setEmailEdited(true);
         break;
+      case "username":
+        setEditedUsername(value);
+        setUsernameEdited(true);
+        break;
       default:
         break;
+    }
+  };
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditedImgSrc(reader.result.toString());
+        setImageEdited(true);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -50,36 +128,8 @@ export const Profile = () => {
     setEditMode(true);
   };
 
-
   const handleSaveClick = () => {
-    const updateData = {};
-    if (firstNameEdited) updateData.firstName = editedFirstName;
-    if (lastNameEdited) updateData.lastName = editedLastName;
-    if (emailEdited) updateData.email = editedEmail;
-  
-    // Only proceed if there's something to update
-    if (Object.keys(updateData).length > 0) {
-      const accessToken = localStorage.getItem("accessToken");
-      const userId = localStorage.getItem("userId");
-      dispatch(
-        updateUser({ id: userId, userData: updateData, token: accessToken })
-      )
-        .unwrap()
-        .then((res) => {
-          if (res && res.status === "success") {
-            setEditMode(false); // Exit edit mode on success
-            // Reset edited flags
-            setFirstNameEdited(false);
-            setLastNameEdited(false);
-            setEmailEdited(false);
-          } else {
-            console.error("Unexpected response structure or status:", res);
-          }
-        })
-        .catch((error) => {
-          console.error("Update failed:", error);
-        });
-    }
+    setSaveRequested(true); // Now, this triggers the useEffect for saving
   };
 
   return (
@@ -92,11 +142,21 @@ export const Profile = () => {
 
         <div className="flex gap-10">
           <div>
-            <img
-              src={userProfile.imgSrc}
-              className="w-96 h-96 object-fill"
-              alt=""
-            />
+            <div className="relative">
+              <img
+                src={editedImgSrc || "assets/uploadIcon.png"} // Replace 'path/to/default/image.jpg' with the path to a default image
+                alt="Profile"
+                className="w-96 h-96 object-cover" // Adjust width (w-96) and height (h-96) as needed
+              />
+              {editMode && (
+                <input
+                  type="file"
+                  className="mt-4   " // Position the file input as needed
+                  onChange={handleImageChange}
+                  alt=""
+                />
+              )}
+            </div>
 
             {editMode ? (
               <button
@@ -126,7 +186,9 @@ export const Profile = () => {
                 </label>
                 <input
                   value={
-                    editMode ? editedFirstName : userProfile?.user?.firstName
+                    firstNameEdited
+                      ? editedFirstName
+                      : userProfile?.user?.firstName ?? ""
                   }
                   onChange={(e) =>
                     handleInputChange("firstName", e.target.value)
@@ -145,7 +207,9 @@ export const Profile = () => {
                 </label>
                 <input
                   value={
-                    editMode ? editedLastName : userProfile?.user?.lastName
+                    lastNameEdited
+                      ? editedLastName
+                      : userProfile?.user?.lastName ?? ""
                   }
                   onChange={(e) =>
                     handleInputChange("lastName", e.target.value)
@@ -165,7 +229,9 @@ export const Profile = () => {
                   Email:
                 </label>
                 <input
-                  value={editMode ? editedEmail : userProfile?.user?.email}
+                  value={
+                    emailEdited ? editedEmail : userProfile?.user?.email ?? ""
+                  }
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   readOnly={!editMode}
                   className="h-10 outline-none text-lg font-sans"
@@ -202,8 +268,15 @@ export const Profile = () => {
                 <input
                   id="username"
                   type="text"
-                  value={userProfile?.user?.username}
-                  readOnly={true}
+                  value={
+                    usernameEdited
+                      ? editedUsername
+                      : userProfile?.user?.username ?? ""
+                  }
+                  onChange={(e) =>
+                    handleInputChange("username", e.target.value)
+                  }
+                  readOnly={!editMode}
                   className="h-10 outline-none text-lg font-sans"
                 />
               </span>

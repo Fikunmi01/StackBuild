@@ -6,8 +6,6 @@ export const updateUser = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     const token = localStorage.getItem('accessToken');
     const userId = localStorage.getItem('userId');
-    console.log('Token:', token);
-    console.log('UserId:', userId);
     const { ...updateData } = userData; // Extract userId and prepare the rest of the data for the request body
     try {
       const response = await axios.patch(`https://stackbuild.onrender.com/api/user/${userId}/update`, updateData, {
