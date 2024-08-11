@@ -58,6 +58,8 @@
  *                 type: string
  *               author:
  *                 type: string
+ *      security:
+ *       - bearerAuth: []
  *     responses:
  *       '201':
  *         description: Post and comment added successfully
@@ -125,6 +127,8 @@
  *         required: true
  *         schema:
  *           type: string
+  *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -163,6 +167,8 @@
  *         required: true
  *         schema:
  *           type: string
+  *     security:
+ *       - bearerAuth: []
  *     responses:
  *       '200':
  *         description: Post deleted successfully
