@@ -26,6 +26,11 @@
  *           type: array
  *           items:
  *             $ref: '#/components/schemas/Comment'
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
  */
 
 /**
