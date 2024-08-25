@@ -11,7 +11,7 @@ import { likeComment, quoteComment } from "../features/post/commentSlice";
 export const SinglePost = () => {
   const dispatch = useDispatch();
   const post = useSelector((state) => state.singlePost);
-  const { postId } = useParams();
+  const { _id } = useParams();
   const [comment, setComment] = useState("");
   const [quote, setQuote] = useState("");
   const [quoteBox, setQuoteBox] = useState(false);
@@ -35,16 +35,16 @@ export const SinglePost = () => {
 
   useEffect(() => {
     // Fetch the individual post data when the component mounts
-    dispatch(fetchSingle(postId));
+    dispatch(fetchSingle(_id));
     if (postComment.fulfilled) {
-      dispatch(fetchSingle(postId));
+      dispatch(fetchSingle(_id));
     }
-  }, [postId]);
+  }, [_id]);
 
   useEffect(() => {
     // update the nnumber of likes
 
-    dispatch(fetchSingle(postId));
+    dispatch(fetchSingle(_id));
     dispatch(fetchSingle(comment._id));
   }, [comment.likes]);
 
@@ -54,7 +54,7 @@ export const SinglePost = () => {
 
   const handleComment = (comment) => {
     if (comment.trim() !== "") {
-      dispatch(postComment({ text: comment, postId }));
+      dispatch(postComment({ text: comment, _id }));
       setComment("");
     }
   };
@@ -69,7 +69,7 @@ export const SinglePost = () => {
     <>
       <div>
         {post.singlePost.map((item) => (
-          <div key={item.postId}>
+          <div key={item._id}>
             <Navbar />
 
             <div className="px-4 w-full items-center flex justify-center flex-col">
@@ -176,13 +176,13 @@ export const SinglePost = () => {
                                     } else {
                                       await dispatch(
                                         likeComment({
-                                          postId,
+                                          _id,
                                           commentId: comment._id,
                                         })
                                       )
                                         .then(() => {
                                           // Fetch the updated post data after liking a comment
-                                          dispatch(fetchSingle(postId));
+                                          dispatch(fetchSingle(_id));
                                         })
                                         .then(() => {
                                           // Toggle the like status
@@ -222,7 +222,7 @@ export const SinglePost = () => {
                                       if (quote.trim() !== "") {
                                         dispatch(
                                           quoteComment({
-                                            postId,
+                                            _id,
                                             commentId: comment._id,
                                             quote: quote,
                                           })

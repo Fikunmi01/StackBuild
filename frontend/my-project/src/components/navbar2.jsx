@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom"; // Import useLocation
+import { searchPost } from "../features/searchSlice"; // Import searchPost action
 import { loginUser } from "../features/user/loginSlice";
 
 export const NavLogged = () => {
@@ -8,7 +9,8 @@ export const NavLogged = () => {
   const users = useSelector((state) => state.user);
   const [search, setSearch] = useState(false);
   const { q } = useParams();
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState(q || ""); // Initialize with query param if available
+  const location = useLocation(); // Get the current location
 
   const handleSearch = () => {
     if (searchText.trim() !== "") {
@@ -24,6 +26,13 @@ export const NavLogged = () => {
   const handleInputChange = (event) => {
     setSearchText(event.target.value);
   };
+
+  useEffect(() => {
+    if (q) {
+      setSearchText(q);
+      dispatch(searchPost(q));
+    }
+  }, [q, dispatch]);
 
   return (
     <>

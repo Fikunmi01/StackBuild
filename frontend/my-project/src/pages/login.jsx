@@ -12,6 +12,11 @@ export const Login = () => {
   const [password, setPassword] = useState("");
   const { username } = useParams();
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   const navigate = useNavigate();
   // const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
@@ -51,45 +56,54 @@ export const Login = () => {
       <div>
         <Navbar />
 
-        <div className="flex items-center justify-center relative mt-4 md:mt-20 px-5 md:w-1/2 m-auto">
+        <div className="flex items-center justify-center relative mt-4  px-5 md:w-1/2 m-auto">
           <form onSubmit={handleSubmit}>
-            <h2 className="text-center text-3xl font-serif font-bold leading-relaxed">
-              Welcome back!
-            </h2>
-            <p className="font-sans md:text-xl pb-4 text-md  m-auto">
-              Sign in to get the most out of 3FK5
-            </p>
+            <div>
+              <h2 className="text-center text-3xl font-serif font-bold leading-relaxed">
+                Welcome back!
+              </h2>
+              <p className="font-sans md:text-xl pb-4 text-md text-center m-auto">
+                Sign in to get the most out of 3FK5
+              </p>
+            </div>
 
-            <div className="flex gap-y-4 flex-col">
-              <span className="flex font-sans">
+            <div className="flex gap-y-4 w-96 px-4 flex-col">
+              <span className="flex items-center font-sans ">
                 <input
                   type="email"
                   name="email"
                   placeholder="Email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-[#F8F8F8] w-full pl-10 py-3 outline-none rounded-xl relative placeholder-shown:text-sm md:placeholder-shown:text-base text-sm md:text-base"
+                  className="bg-[#F8F8F8] w-full pl-10 py-4 outline-none rounded-xl relative placeholder-shown:text-sm md:placeholder-shown:text-base text-sm md:text-base"
                 />
                 <img
                   src="/assets/avatar.png"
-                  className="pl-3 w-8 pt-3.5 absolute"
+                  className="pl-3 w-8 absolute"
                   alt=""
                 />
               </span>
 
-              <span className="flex font-sans">
+              <span className="flex items-center font-sans">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   placeholder="Password"
-                  className="bg-[#F8F8F8] w-full pl-10 py-3 outline-none rounded-xl relative placeholder-shown:text-sm md:placeholder-shown:text-md text-base"
+                  className="bg-[#F8F8F8] w-full pl-10 py-4 outline-none rounded-xl relative placeholder-shown:text-sm md:placeholder-shown:text-md text-base"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <img
                   src="/assets/key.png"
-                  className="pl-3 w-8 pt-3.5 absolute"
+                  className="pl-3 w-8 absolute"
                   alt=""
+                />
+
+                <img
+                  src={showPassword ? "/assets/eye.svg" : "/assets/eyeOpen.svg"}
+                  className="w-6 absolute right-10 md:right-40 cursor-pointer"
+                  alt=""
+                  onClick={togglePasswordVisibility}
                 />
               </span>
 
@@ -115,7 +129,7 @@ export const Login = () => {
           </form>
         </div>
 
-        <div className="md:top-36 top-24 flex justify-between mx-4 relative">
+        <div className="fixed bottom-0 left-0 right-0 flex justify-between mx-4 p-4 bg-white">
           <Link to="/user/create-account">Create account</Link>
           <p>See screenlock page</p>
         </div>

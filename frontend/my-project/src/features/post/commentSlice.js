@@ -7,10 +7,10 @@ const initialState = {
     error: '',
 };
 
-export const postComment = createAsyncThunk("post/postComment", async ({ text, postId, username }, { rejectWithValue }) => {
+export const postComment = createAsyncThunk("post/postComment", async ({ text, _id, username }, { rejectWithValue }) => {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.post(`https://stackbuild.onrender.com/api/post/${postId}/comment`, { text, username }, {
+        const response = await axios.post(`https://stackbuild.onrender.com/api/post/${_id}/comment`, { text, username }, {
             headers: { 'x-auth-token': token }
         });
         return response.data;

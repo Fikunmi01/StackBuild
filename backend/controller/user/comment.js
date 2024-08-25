@@ -19,11 +19,11 @@ const newComment = [
 
     try {
       const { text } = req.body;
-      const postId = req.params.postId;
+      const _id = req.params._id;
       const username = req.user.username;
 
       // Find the post by its postId
-      const post = await PostModel.findOne({ postId: postId });
+      const post = await PostModel.findOne({ _id: _id });
 
       if (!post) {
         return res.status(404).json({ error: "No comments found" });
@@ -46,11 +46,11 @@ const newComment = [
 const quoteComment = async (req, res, next) => {
   try {
     console.log(req.body); // Log the request body
-    const { postId } = req.params;
+    const { _id } = req.params;
     const { commentId, quote } = req.body;
-    const post = await PostModel.findOne({ postId });
+    const post = await PostModel.findOne({ _id });
     if (!post) {
-      console.log(`Post with ID ${postId} not found`); // Log if post not found
+      console.log(`Post with ID ${_id} not found`); // Log if post not found
     }
     const comment = post.comments.id(commentId);
     if (!comment) {
@@ -68,9 +68,9 @@ const quoteComment = async (req, res, next) => {
 
 const likeComment = async (req, res, next) => {
   try {
-    const { postId } = req.params;
+    const { _id } = req.params;
     const { commentId } = req.body;
-    const post = await PostModel.findOne({ postId });
+    const post = await PostModel.findOne({ _id });
     const comment = post.comments.id(commentId);
     const userIndex = comment.likes.indexOf(req.user._id);
     if (userIndex === -1) {

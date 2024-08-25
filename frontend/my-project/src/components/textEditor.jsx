@@ -3,7 +3,7 @@ import "../css/textEditor.css";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
 
-const TextEditor = ({ comment, setComment, handleComment }) => {
+const TextEditor = ({ comment, setComment, handleComment,isQuote }) => {
   const quillRef = useRef(null);
 
   useEffect(() => {

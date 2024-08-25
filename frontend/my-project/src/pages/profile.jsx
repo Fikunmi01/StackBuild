@@ -32,7 +32,9 @@ export const Profile = () => {
   useEffect(() => {
     if (saveRequested) {
       if (imageEdited) {
-        dispatch(updateProfilePicture({ imgSrc: editedImgSrc }))
+        const formData = new FormData();
+        formData.append("picture", editedImgSrc);
+        dispatch(updateProfilePicture({ pictureFormData: formData }))
           .unwrap()
           .then((res) => {
             if (res && res.status === "success") {
@@ -45,7 +47,7 @@ export const Profile = () => {
             console.error("Image Update failed:", error);
           })
           .finally(() => {
-            // setSaveRequested(false);
+            setSaveRequested(false);
             setEditMode(false);
           });
       } else if (firstNameEdited || lastNameEdited || emailEdited || usernameEdited) {
@@ -54,7 +56,8 @@ export const Profile = () => {
             ...(firstNameEdited && { firstName: editedFirstName }),
             ...(lastNameEdited && { lastName: editedLastName }),
             ...(emailEdited && { email: editedEmail }),
-            ...(usernameEdited && { username: editedUsername }), // Fixed key from 'email' to 'username'
+            ...(usernameEdited && { username: editedUsername }),
+            ...(imageEdited && { profilePicture: editedImgSrc }),
           })
         )
           .unwrap()
@@ -106,6 +109,10 @@ export const Profile = () => {
       case "username":
         setEditedUsername(value);
         setUsernameEdited(true);
+        break;
+      case "profilePicture":
+        setEditedImgSrc(value);
+        setImageEdited(true);
         break;
       default:
         break;

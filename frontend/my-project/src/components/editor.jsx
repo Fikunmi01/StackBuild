@@ -9,7 +9,7 @@ export const Editor = () => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.post);
   const post = useSelector((state) => state.singlePost);
-  const { postId } = useParams();
+  const { _id } = useParams();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -25,8 +25,8 @@ export const Editor = () => {
 
   useEffect(() => {
     dispatch(fetchPosts());
-    dispatch(fetchSingle(postId));
-  }, [dispatch, postId]);
+    // dispatch(fetchSingle(postId));
+  }, [dispatch, _id]);
 
   // Updated loading condition to check for both posts and post loading states
   //  const isLoading = posts.loading || post.loading || !posts.post.length || !post.details;
@@ -51,7 +51,7 @@ export const Editor = () => {
       {posts.post.slice(0, 3).map((post) => (
         <div
           className="flex flex-col-reverse px-4 md:flex-row md:items-center md:justify-center md:px-72 md:py-16 md:gap-10 relative mb-10 md:mb-0"
-          key={post.postId}
+          key={post._id}
         >
           <div className="mt-10 md:mt-0">
             <img src={post.imgSrc} alt="" />
@@ -80,7 +80,7 @@ export const Editor = () => {
 
             <Link
               className="font-serif border-solid border-[#00] border-b-2"
-              to={`/post/${post.postId}`}
+              to={`/post/${post._id}`}
             >
               Read more
             </Link>
@@ -159,7 +159,7 @@ export const Editor = () => {
 
                 <Link
                   className="font-serif border-solid border-[#00] border-b-2"
-                  to={`/post/${item.postId}`}
+                  to={`/post/${item._id}`}
                 >
                   Read more
                 </Link>
