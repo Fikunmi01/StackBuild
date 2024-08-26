@@ -50,10 +50,10 @@ export const Navbar = () => {
           )}
           <div>
             {search ? (
-              <div className="flex gap-4 items-center">
+              <div className="flex top-20 gap-4 items-center">
                 <input
                   type="search"
-                  className="outline-none border-2 border-solid z-10 rounded-lg py-1"
+                  className="outline-none left-6 m-4 top-20 md:top-0 absolute md:relative border-2 w-4/5  border-solid z-10 rounded-lg py-1"
                   value={searchText}
                   onChange={handleInputChange}
                 />
@@ -74,6 +74,7 @@ export const Navbar = () => {
                 onClick={handleClick}
                 src="/assets/searchIcon.png"
                 alt=""
+                className="cursor-pointer"
               />
             )}
           </div>

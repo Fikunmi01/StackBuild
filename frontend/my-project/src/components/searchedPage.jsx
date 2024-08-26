@@ -25,7 +25,7 @@ export const Search = () => {
       {search.map((item) => {
         return (
           <>
-            <div className="flex relative items-center justify-center px-48 py-16 gap-10  ">
+            <div className="flex relative flex-col items-center justify-center px-4 md:px-48 mb-4 md:mb-0 md:py-16 md:gap-10  ">
               <div className="w-80 flex items-center object-contain">
                 <img src={item.imgSrc} alt="" className="w-full" />
               </div>
@@ -54,8 +54,8 @@ export const Search = () => {
 
                 <Link
                   className="font-serif border-solid border-[#00] border-b-2"
-                  key={item.postId}
-                  to={`/post/${item.postId}`}
+                  key={item._id}
+                  to={`/post/${item._id}`}
                 >
                   Read more
                 </Link>

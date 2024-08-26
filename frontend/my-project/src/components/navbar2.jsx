@@ -50,36 +50,34 @@ export const NavLogged = () => {
         <div className="flex">
           <div className="flex items-center gap-10">
             <div>
-              {search ? (
-                <div className="flex gap-4 items-center">
-                  <input
-                    type="search"
-                    className="outline-none border-2 border-solid z-10 rounded-lg py-1"
-                    name=""
-                    id=""
-                    value={searchText}
-                    onChange={handleInputChange}
-                  />
-
-                  <Link
-                    className="font-serif border-solid border-[#00] border-b-2"
-                    to={`/search?q=${searchText}`}
-                  >
-                    <img
-                      onClick={handleSearch}
-                      className="cursor-pointer"
-                      src="/assets/searchIcon.png"
-                      alt=""
-                    />
-                  </Link>
-                </div>
-              ) : (
-                <img
-                  onClick={handleClick}
-                  src="/assets/searchIcon.png"
-                  alt=""
+            {search ? (
+              <div className="flex top-20 gap-4 items-center">
+                <input
+                  type="search"
+                  className="outline-none left-6 m-4 top-20 md:top-0 absolute md:relative border-2 w-4/5  border-solid z-10 rounded-lg py-1"
+                  value={searchText}
+                  onChange={handleInputChange}
                 />
-              )}
+                <Link
+                  className="font-serif border-solid border-[#00] border-b-2"
+                  to={`/search?q=${searchText}`}
+                >
+                  <img
+                    onClick={handleSearch}
+                    className="cursor-pointer"
+                    src="/assets/searchIcon.png"
+                    alt=""
+                  />
+                </Link>
+              </div>
+            ) : (
+              <img
+                onClick={handleClick}
+                src="/assets/searchIcon.png"
+                alt=""
+                className="cursor-pointer"
+              />
+            )}
             </div>
 
             <Link to="/user/login">

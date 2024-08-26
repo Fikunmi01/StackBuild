@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addPost } from "../features/post/postSlice";
 import { Navbar } from "./navbar";
+import TextEditor from "./textEditor";
 
 export const PostForm = () => {
   const [formData, setFormData] = useState({
@@ -99,6 +100,7 @@ export const PostForm = () => {
               />
             </div>
           </div>
+          <TextEditor/>
 
           <button
             type="submit"
