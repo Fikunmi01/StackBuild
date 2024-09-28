@@ -81,7 +81,9 @@ export const DemoPage = () => {
   };
 
   return (
-    <div className="demo-page">
+    // color: #4b5563;
+
+    <div className="demo-page text-[#4b5563]">
       <section>
         <div className="href-target" id="structure"></div>
         <h1>

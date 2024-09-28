@@ -841,9 +841,7 @@ html {
 }
 
 body {
-    background: #f3f0e7;
     font-family: Roboto, sans-serif;
-    color: #4b5563;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale
 }

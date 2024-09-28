@@ -85,7 +85,7 @@ export const SinglePost = () => {
                 </p>
               </span>
 
-              <p className="md:px-80 font-sans leading-normal ">
+              <p className="md:px-40 text-sm font-sans leading-normal ">
                 {item.content}
               </p>
             </div>

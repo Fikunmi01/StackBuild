@@ -28,6 +28,11 @@ export const Editor = () => {
     // dispatch(fetchSingle(postId));
   }, [dispatch, _id]);
 
+  const getFirstName = (fullName) => {
+    if (!fullName) return "";
+    return fullName.split(" ")[0];
+  };
+
   // Updated loading condition to check for both posts and post loading states
   //  const isLoading = posts.loading || post.loading || !posts.post.length || !post.details;
 
@@ -35,58 +40,140 @@ export const Editor = () => {
   //    return <div className="w-full h-full flex justify-center items-center"><span class="loader"></span></div>;
   //  }
 
+  const blogArray = [
+    {
+      id: 1,
+      imgSrc: "/assets/blogImg1.jpeg",
+      title: "01kvng The New Moneyman",
+      description:
+        "The world is filled with dangerous technologies which is now integrated ...",
+      authImg: "/assets/authImg1.jpeg",
+    },
+    {
+      id: 2,
+      imgSrc: "/assets/blogImg2.jpeg",
+      title: "01kvng The New Moneyman",
+      description:
+        "The world is filled with dangerous technologies which is now integrated ...",
+      authImg: "/assets/authImg2.jpeg",
+    },
+    {
+      id: 3,
+      imgSrc: "/assets/blogImg3.jpeg",
+      title: "01kvng The New Moneyman",
+      description:
+        "The world is filled with dangerous technologies which is now integrated ...",
+      authImg: "/assets/authImg3.jpeg",
+    },
+  ];
+
   return (
-    <div className="pt-16 relative">
-      <div className="flex items-center gap-y-4 flex-col relative ">
-        <h1 className="font-sans text-3xl md:text-5xl text-center font-bold">
-          Editor's pick
-        </h1>
-        <img
-          src="/assets/Line.png"
-          className="rounded-full mb-4 md:mb-0"
-          alt=""
-        />
+    <div className="pt-12 relative ">
+      <div className="px-4">
+        <h1 className="font-ser text-2xl font-bold mb-2">Recent Blogs</h1>
+
+        <div className="grid grid-flow-col overflow-x-scroll no-scrollbar auto-cols-max gap-4">
+          {blogArray.map((item) => {
+            return (
+              <div className="flex flex-col gap-y-2" key={item.id}>
+                <div className="w-[150px] flex flex-col gap-y-2">
+                  <img
+                    src={item.imgSrc}
+                    alt="blog image"
+                    className="h-36 rounded-[20px]"
+                  />
+                  <h2 className="font-ser w-full font-bold text-[11px] leading-3">
+                    {item.title.slice(0, 20)}...
+                  </h2>
+                  <p className="font-pop w-full text-[10px]">
+                    {item.description.slice(0, 50)}...
+                  </p>
+
+                  <div className="flex gap-x-2 items-center">
+                    <img
+                      src={item.authImg}
+                      className="w-5 h-5 rounded-full"
+                      alt=""
+                    />
+                    <p className="font-pop text-[10px] font-normal">
+                      SkullCrusher
+                    </p>
+                    <p className="text-[8px]">10 Jan 2024</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      {posts.post.slice(0, 3).map((post) => (
-        <div
-          className="flex flex-col-reverse px-4 md:flex-row md:items-center md:justify-center md:px-72 md:py-16 md:gap-10 relative mb-10 md:mb-0"
-          key={post._id}
-        >
-          <div className="mt-10 md:mt-0">
-            <img src={post.imgSrc} alt="" />
-          </div>
-          <div className="md:w-3/5">
-            <h2 className="text-lg md:text-xl text-lightGray lead font-sans">
-              {post.tag}
-            </h2>
-            <h1 className="text-2xl md:text-3xl font-serif font-bold pb-2">
-              {post.title}
-            </h1>
-
-            <div className="flex flex-row gap-2 md:gap-4 items-center pb-2">
-              <p className="text-base text-lightGray font-sans font-normal">
-                {post.author}
-              </p>
-              <img src="/assets/Ellipse1.png" alt="" />
-              <p className="text-base font-sans text-lightGray">
-                {post.createdAt.slice(0, 10)}
-              </p>
-            </div>
-
-            <p className="text-base pb-2 font-sans font-normal text-[#000]">
-              {post.content}
+      <div className="flex px-4 gap-y-4 mt-4 flex-col relative ">
+        <h1 className="font-ser text-2xl md:text-2xl font-bold">
+          Editor's pick
+        </h1>
+      </div>
+      {posts.post.length > 0 && (
+        <div className="px-4 flex items-center gap-x-2">
+          <img
+            src="/assets/editor1.jpeg"
+            alt=""
+            className="w-44 h-44 rounded-2xl"
+          />
+          <div className="my-4 flex flex-col">
+            <h1 className="font-ser text-xl">{posts.post[0].title.slice(0, 20)}...</h1>
+            <p className="font-pop text-sm mb-1">
+              {posts.post[0].content.slice(0, 40)}...
             </p>
 
             <Link
-              className="font-serif border-solid border-[#00] border-b-2"
-              to={`/post/${post._id}`}
+              to={`/post/${posts.post[0]._id}`}
+              className="font-pop text-xs mb-2 text-[#1D1B20] underline"
             >
-              Read more
+              Read More
             </Link>
+
+            <div className="flex gap-x-2 items-center">
+              <img
+                src="/assets/authImg1.jpeg"
+                className="w-5 h-5 rounded-full"
+                alt=""
+              />
+              <p className="font-pop text-[10px] font-normal">{posts.post[0].author}</p>
+              <p className="text-[8px]">{posts.post[0].createdAt.slice(0, 10)}</p>
+            </div>
+
+            <div className="flex gap-4 text-[#1D1B20] text-[10px] font-pop justify-center">
+              <p>5 Views</p>
+              <p>{posts.post[0].comments.length} Comments</p>
+            </div>
           </div>
         </div>
-      ))}
+      )}
+
+{posts.post.slice(1, 5).map((post, index) => (
+  <div
+    className="flex flex-col px-4 md:flex-row md:items-center md:justify-center md:px-72 md:py-16 md:gap-10 relative mb-10 md:mb-0"
+    key={post._id}
+  >
+    <div className="flex mt-4">
+      <div className="px-4 flex items-center gap-2">
+        <img
+          src={`/assets/postImg${index + 1}.jpeg`}
+          className="w-10 h-10 rounded-xl"
+          alt=""
+        />
+        <div className="flex flex-col gap-y-2">
+          <h3 className="text-[11px] font-ser font-bold">
+            {post.title}
+          </h3>
+          <p className="text-[10px] font-normal font-ser">
+            By {getFirstName(post.author)}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+))}
 
       <div className="relative px-4 md:h-96 mb-20">
         <div className="md:absolute md:w-[38rem] bg-white md:right-16 md:py-20 md:px-16 z-10">
@@ -122,7 +209,7 @@ export const Editor = () => {
           className="md:absolute h-60 md:h-full mt-4 md:mb-0"
         />
       </div>
-   
+
       {posts.post.slice(3, 7).map((item, index) => {
         const startIndex = posts.post.length;
         return (
@@ -171,9 +258,6 @@ export const Editor = () => {
     </div>
   );
 };
-
-
-
 
 // <button onClick={showModal} className=" border-solid border-2 px-4 py-2">
 // Create Post
