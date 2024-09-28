@@ -750,6 +750,10 @@ video {
   grid-auto-columns: max-content;
 }
 
+.grid-flow-row {
+  grid-auto-flow: row;
+}
+
 .grid-flow-col {
   grid-auto-flow: column;
 }

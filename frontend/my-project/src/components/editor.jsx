@@ -120,7 +120,9 @@ export const Editor = () => {
             className="w-44 h-44 rounded-2xl"
           />
           <div className="my-4 flex flex-col">
-            <h1 className="font-ser text-xl">{posts.post[0].title.slice(0, 20)}...</h1>
+            <h1 className="font-ser text-xl">
+              {posts.post[0].title.slice(0, 20)}...
+            </h1>
             <p className="font-pop text-sm mb-1">
               {posts.post[0].content.slice(0, 40)}...
             </p>
@@ -138,8 +140,12 @@ export const Editor = () => {
                 className="w-5 h-5 rounded-full"
                 alt=""
               />
-              <p className="font-pop text-[10px] font-normal">{posts.post[0].author}</p>
-              <p className="text-[8px]">{posts.post[0].createdAt.slice(0, 10)}</p>
+              <p className="font-pop text-[10px] font-normal">
+                {posts.post[0].author}
+              </p>
+              <p className="text-[8px]">
+                {posts.post[0].createdAt.slice(0, 10)}
+              </p>
             </div>
 
             <div className="flex gap-4 text-[#1D1B20] text-[10px] font-pop justify-center">
@@ -150,30 +156,34 @@ export const Editor = () => {
         </div>
       )}
 
-{posts.post.slice(1, 5).map((post, index) => (
-  <div
-    className="flex flex-col px-4 md:flex-row md:items-center md:justify-center md:px-72 md:py-16 md:gap-10 relative mb-10 md:mb-0"
-    key={post._id}
-  >
-    <div className="flex mt-4">
-      <div className="px-4 flex items-center gap-2">
-        <img
-          src={`/assets/postImg${index + 1}.jpeg`}
-          className="w-10 h-10 rounded-xl"
-          alt=""
-        />
-        <div className="flex flex-col gap-y-2">
-          <h3 className="text-[11px] font-ser font-bold">
-            {post.title}
-          </h3>
-          <p className="text-[10px] font-normal font-ser">
-            By {getFirstName(post.author)}
-          </p>
-        </div>
+      <div className="grid grid-cols-2">
+        {posts.post.slice(1, 5).map((post, index) => (
+          <div
+            className="flex flex-col px-4 md:flex-row md:items-center md:justify-center md:px-72 md:py-16 md:gap-10 relative md:mb-0"
+            key={post._id}
+          >
+            <div className="my-4">
+              <div className="px-4 flex flex-row items-center gap-2">
+                <img
+                  src={`/assets/postImg${index + 1}.jpeg`}
+                  className="w-10 h-10 rounded-xl"
+                  alt=""
+                />
+                <div className="flex flex-col gap-y-2">
+                  <Link to={`/post/${post._id}`}>
+                    <h3 className="text-[11px] font-ser font-bold">
+                      {post.title.slice(0, 22)}...
+                    </h3>
+                  </Link>
+                  <p className="text-[10px] font-normal font-ser">
+                    By {getFirstName(post.author)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
-    </div>
-  </div>
-))}
 
       <div className="relative px-4 md:h-96 mb-20">
         <div className="md:absolute md:w-[38rem] bg-white md:right-16 md:py-20 md:px-16 z-10">
