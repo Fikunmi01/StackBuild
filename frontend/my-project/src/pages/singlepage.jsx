@@ -79,7 +79,7 @@ export const SinglePost = () => {
                 <img src="/assets/blogImg2.jpeg" alt="" />
               </div>
 
-              <div className="absolute top-60 py-4 w-full rounded-t-3xl bg-white">
+              <div className="absolute top-56 py-4 w-full rounded-t-3xl bg-white">
                 <div className="px-4">
                   <p className="font-pop font-normal text-[15px] bg-[#F5F5F5] mb-2 text-[#1E1E1E] px-2 py-1 w-20 rounded-lg">
                     Recents
