@@ -185,6 +185,39 @@ export const Editor = () => {
         ))}
       </div>
 
+      <div className="px-4 my-">
+        <h1 className="font-ser text-2xl font-bold">Trending</h1>
+      </div>
+
+      <div className="px-4 flex gap-x-2 items-center mb-4">
+        <img
+          src="/assets/trend1.jpeg"
+          className="w-20 h-20 rounded-2xl"
+          alt=""
+        />
+        <div>
+          <div className="flex justify-between mt-1">
+            <p className="text-[10px] font-pop border-solid border border-[#00000033] px-2 rounded-full ">
+              Hot
+            </p>
+            <p className="font-pop text-[10px]">Published 2hrs ago</p>
+          </div>
+
+          <div>
+            <h2 className="text-[11px] font-bold mt-2 font-ser">
+              01kvng The New Moneyman
+            </h2>
+            <p className="font-pop text-[10px] mb-2">
+              He spends like there is no tomorrow. The odogwu in town....
+            </p>
+            <div className="flex justify-between">
+              <p className="text-[8px] font-normal">By SkullCrusher</p>
+              <p className="text-[9px]">5 Views</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="relative px-4 md:h-96 mb-20">
         <div className="md:absolute md:w-[38rem] bg-white md:right-16 md:py-20 md:px-16 z-10">
           <h2 className="text-xl font-sans pb-2 text-lightGray">INTERIOR</h2>
@@ -220,51 +253,53 @@ export const Editor = () => {
         />
       </div>
 
-      {posts.post.slice(3, 7).map((item, index) => {
-        const startIndex = posts.post.length;
-        return (
-          <div
-            key={index + startIndex}
-            className="relative px-4 md:px-0 mt-4 md:mt-0"
-          >
-            <div className="flex relative flex-col md:flex-row md:items-center md:justify-center md:px-48 md:py-16 md:gap-10 mb-10">
-              <div>
-                <img src={item.imgSrc} alt="" className="w-full" />
-              </div>
-
-              <div className="w-full">
-                <h2 className="text-lg md:text-xl text-lightGray lead font-sans">
-                  {item.tag}
-                </h2>
-                <h1 className="text-2xl md:text-3xl font-serif font-bold pb-2">
-                  {item.title}
-                </h1>
-
-                <div className="flex gap-2 md:gap-4 items-center pb-2">
-                  <p className="text-base text-lightGray font-sans font-normal">
-                    {item.author}
-                  </p>
-                  <img src="/assets/Ellipse1.png" alt="" />
-                  <p className="text-base font-sans text-lightGray">
-                    {item.createdAt.slice(0, 10)}
-                  </p>
+      {posts.post &&
+        posts.post.length > 3 &&
+        posts.post.slice(3, 7).map((item, index) => {
+          const startIndex = posts.post.length;
+          return (
+            <div
+              key={index + startIndex}
+              className="relative px-4 md:px-0 mt-4 md:mt-0"
+            >
+              <div className="flex relative flex-col md:flex-row md:items-center md:justify-center md:px-48 md:py-16 md:gap-10 mb-10">
+                <div>
+                  <img src={item.imgSrc} alt="" className="w-full" />
                 </div>
 
-                <p className="text-base font-sans font-normal text-[#000]">
-                  {item.description}
-                </p>
+                <div className="w-full">
+                  <h2 className="text-lg md:text-xl text-lightGray lead font-sans">
+                    {item.tag}
+                  </h2>
+                  <h1 className="text-2xl md:text-3xl font-serif font-bold pb-2">
+                    {item.title}
+                  </h1>
 
-                <Link
-                  className="font-serif border-solid border-[#00] border-b-2"
-                  to={`/post/${item._id}`}
-                >
-                  Read more
-                </Link>
+                  <div className="flex gap-2 md:gap-4 items-center pb-2">
+                    <p className="text-base text-lightGray font-sans font-normal">
+                      {item.author}
+                    </p>
+                    <img src="/assets/Ellipse1.png" alt="" />
+                    <p className="text-base font-sans text-lightGray">
+                      {item.createdAt.slice(0, 10)}
+                    </p>
+                  </div>
+
+                  <p className="text-base font-sans font-normal text-[#000]">
+                    {item.description}
+                  </p>
+
+                  <Link
+                    className="font-serif border-solid border-[#00] border-b-2"
+                    to={`/post/${item._id}`}
+                  >
+                    Read more
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
     </div>
   );
 };
