@@ -31,7 +31,7 @@ export const Navbar = () => {
     <div className="flex px-4 pt-6 pb-7 font-bold font-serif items-center justify-between">
       <div className="flex justify-between md:gap-6 items-center">
         <Link to="/">
-          <img src="/assets/Logo3.png" alt="" />
+          <img src="/assets/Exclude1.png" alt="" />
         </Link>
 
         <ul>

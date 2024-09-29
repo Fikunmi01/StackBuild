@@ -67,9 +67,40 @@ export const Editor = () => {
     },
   ];
 
+  const trendingArray = [
+    {
+      id:1,
+      imgSrc: "/assets/trend1.jpeg",
+      hotTag: 1,
+      title: "01kvng The New Moneyman",
+      content: "He spends like there is no tomorrow. The odogwu in town",
+      author: "SkullCrusher",
+      views: 5,
+    },
+    {
+      id:2,
+      imgSrc: "/assets/editor1.jpeg",
+      hotTag: 1,
+      title: "Na Palmer dey hot like this!!!",
+      content:
+        "He spends plays like there is no tomorrow. Goals, assists, freekicks, penalties, bangers ",
+      author: "SkullCrusher",
+      views: 25,
+    },
+    {
+      id:3,
+      imgSrc: "/assets/blogImg2.jpeg",
+      hotTag: 0,
+      title: "Big Joe don sly me o and na him talk weekend ",
+      content: "He spends like there is no tomorrow. The odogwu in town",
+      author: "SkullCrusher",
+      views: 2,
+    },
+  ];
+
   return (
     <div className="pt-12 relative ">
-      <div className="px-4">
+      <div className="p-4 bg-[#F4F4F4]">
         <h1 className="font-ser text-2xl font-bold mb-2">Recent Blogs</h1>
 
         <div className="grid grid-flow-col overflow-x-scroll no-scrollbar auto-cols-max gap-4">
@@ -185,40 +216,75 @@ export const Editor = () => {
         ))}
       </div>
 
-      <div className="px-4 my-">
+      <div className="px-4 my-2">
         <h1 className="font-ser text-2xl font-bold">Trending</h1>
       </div>
 
-      <div className="px-4 flex gap-x-2 items-center mb-4">
-        <img
-          src="/assets/trend1.jpeg"
-          className="w-20 h-20 rounded-2xl"
-          alt=""
-        />
-        <div>
-          <div className="flex justify-between mt-1">
-            <p className="text-[10px] font-pop border-solid border border-[#00000033] px-2 rounded-full ">
-              Hot
-            </p>
-            <p className="font-pop text-[10px]">Published 2hrs ago</p>
-          </div>
+      {trendingArray.map((item) => {
+        return (
+          <div key={item.id}>
+            <div className="mx-4  flex gap-x-2 items-center border border-solid border-[#F8F8F8] bg-[#FBFBFB] rounded-xl mb-4">
+              <img src={item.imgSrc} className="w-16 h-16 rounded-2xl" alt="" />
+              <div className="px-2">
+                <div className="flex justify-between my-1">
+                  <>
+                    {item.hotTag === 1 ? (
+                      <p className="text-[10px] font-pop border-solid border bg-[#D9D9D9] border-[#AEAEAE] px-2 rounded-full ">
+                        Hot
+                      </p>
+                    ) : (
+                      <div></div>
+                    )}
 
-          <div>
-            <h2 className="text-[11px] font-bold mt-2 font-ser">
-              01kvng The New Moneyman
-            </h2>
-            <p className="font-pop text-[10px] mb-2">
-              He spends like there is no tomorrow. The odogwu in town....
-            </p>
-            <div className="flex justify-between">
-              <p className="text-[8px] font-normal">By SkullCrusher</p>
-              <p className="text-[9px]">5 Views</p>
+                    <p className="font-pop text-[10px]">Published 2hrs ago</p>
+                  </>
+                </div>
+
+                <div>
+                  <h2 className="text-[11px] font-bold mt-2 font-ser">
+                    {item.title}
+                  </h2>
+                  <p className="font-pop text-[10px] mb-2">{item.content}</p>
+                  <div className="flex justify-between">
+                    <p className="text-[8px] font-normal">By {item.author}</p>
+                    <p className="text-[9px]">{item.views} Views</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+        );
+      })}
+
+      <div className="px-4 py-4 flex flex-col gap-y-2">
+        <h1 className="font-bold text-xl font-ser">Interior</h1>
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <img
+              src="/assets/intImg.jpeg"
+              className="w-5 h-5 rounded-full"
+              alt=""
+            />
+            <p className="font-pop text-base font-normal text-[#1D1B20]">
+              Alpha Wolf
+            </p>
+          </div>
+          <p className="font-pop text-[#8E8D8F]">10 days ago(5mins read)</p>
         </div>
+
+        <p className="text-lg text-[#1D1B20] font-pop">
+          In the dark of night comes the hornets to destroy the beehive. The
+          queen signals the drones call the attention of the soldiers leading
+        </p>
+
+        <img
+          src="/assets/articleImage.png"
+          className="rounded-xl"
+          alt="article image"
+        />
       </div>
 
-      <div className="relative px-4 md:h-96 mb-20">
+      {/* <div className="relative px-4 md:h-96 mb-20">
         <div className="md:absolute md:w-[38rem] bg-white md:right-16 md:py-20 md:px-16 z-10">
           <h2 className="text-xl font-sans pb-2 text-lightGray">INTERIOR</h2>
           <h1 className="font-serif md:w-full text-xl md:text-4xl pb-2 font-bold leading-tight">
@@ -251,9 +317,9 @@ export const Editor = () => {
           alt=""
           className="md:absolute h-60 md:h-full mt-4 md:mb-0"
         />
-      </div>
+      </div> */}
 
-      {posts.post &&
+      {/* {posts.post &&
         posts.post.length > 3 &&
         posts.post.slice(3, 7).map((item, index) => {
           const startIndex = posts.post.length;
@@ -299,7 +365,7 @@ export const Editor = () => {
               </div>
             </div>
           );
-        })}
+        })} */}
     </div>
   );
 };
