@@ -4,6 +4,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../features/user/loginSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const Login = () => {
   const dispatch = useDispatch();
@@ -11,16 +13,12 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { username } = useParams();
-
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  const navigate = useNavigate();
-  // const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-
-  // console.log(user);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -36,26 +34,29 @@ export const Login = () => {
           localStorage.setItem("userId", userId);
         }
         if (userId) {
-          alert(`You're successfully logged in.`);
-          navigate(`/user/profile/${userId}`);
+          toast.success("You're successfully logged in.");
+          setTimeout(() => {
+            navigate(`/user/profile/${userId}`);
+          }, 2000); // Delay navigation to allow toast to show
         } else {
           // Handle case where userId is undefined
+          toast.error("Login failed. Please try again.");
           navigate(`/`);
         }
-        console.log("token ", accessToken);
-        console.log("iddd ", userId);
-        console.log("user two", res);
+        // console.log("token ", accessToken);
+        // console.log("iddd ", userId);
+        // console.log("user two", res);
       })
       .catch((err) => {
         console.log(err);
-        alert("An error occurred during login.");
+        toast.error("An error occurred during login.");
       });
   };
+
   return (
     <>
       <div>
         <Navbar />
-
         <div className="flex items-center justify-center relative mt-4  px-5 md:w-1/2 m-auto">
           <form onSubmit={handleSubmit}>
             <div>
@@ -134,6 +135,7 @@ export const Login = () => {
           <p>See screenlock page</p>
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 };

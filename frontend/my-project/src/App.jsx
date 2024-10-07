@@ -10,6 +10,7 @@ import { Profile } from "./pages/profile";
 import { PostForm } from "./components/post-form";
 
 function App() {
+  
   return (
     <div>
       <Routes>
