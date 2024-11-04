@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom"; // Import useLocation
+import { searchPost } from "../features/searchSlice"; // Import searchPost action
 import { loginUser } from "../features/user/loginSlice";
 
 export const NavLogged = () => {
@@ -8,7 +9,8 @@ export const NavLogged = () => {
   const users = useSelector((state) => state.user);
   const [search, setSearch] = useState(false);
   const { q } = useParams();
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState(q || ""); // Initialize with query param if available
+  const location = useLocation(); // Get the current location
 
   const handleSearch = () => {
     if (searchText.trim() !== "") {
@@ -24,6 +26,13 @@ export const NavLogged = () => {
   const handleInputChange = (event) => {
     setSearchText(event.target.value);
   };
+
+  useEffect(() => {
+    if (q) {
+      setSearchText(q);
+      dispatch(searchPost(q));
+    }
+  }, [q, dispatch]);
 
   return (
     <>
@@ -41,36 +50,34 @@ export const NavLogged = () => {
         <div className="flex">
           <div className="flex items-center gap-10">
             <div>
-              {search ? (
-                <div className="flex gap-4 items-center">
-                  <input
-                    type="search"
-                    className="outline-none border-2 border-solid z-10 rounded-lg py-1"
-                    name=""
-                    id=""
-                    value={searchText}
-                    onChange={handleInputChange}
-                  />
-
-                  <Link
-                    className="font-serif border-solid border-[#00] border-b-2"
-                    to={`/search?q=${searchText}`}
-                  >
-                    <img
-                      onClick={handleSearch}
-                      className="cursor-pointer"
-                      src="/assets/searchIcon.png"
-                      alt=""
-                    />
-                  </Link>
-                </div>
-              ) : (
-                <img
-                  onClick={handleClick}
-                  src="/assets/searchIcon.png"
-                  alt=""
+            {search ? (
+              <div className="flex top-20 gap-4 items-center">
+                <input
+                  type="search"
+                  className="outline-none left-6 m-4 top-20 md:top-0 absolute md:relative border-2 w-4/5  border-solid z-10 rounded-lg py-1"
+                  value={searchText}
+                  onChange={handleInputChange}
                 />
-              )}
+                <Link
+                  className="font-serif border-solid border-[#00] border-b-2"
+                  to={`/search?q=${searchText}`}
+                >
+                  <img
+                    onClick={handleSearch}
+                    className="cursor-pointer"
+                    src="/assets/searchIcon.png"
+                    alt=""
+                  />
+                </Link>
+              </div>
+            ) : (
+              <img
+                onClick={handleClick}
+                src="/assets/searchIcon.png"
+                alt=""
+                className="cursor-pointer"
+              />
+            )}
             </div>
 
             <Link to="/user/login">

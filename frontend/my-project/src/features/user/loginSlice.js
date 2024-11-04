@@ -13,7 +13,17 @@ export const loginUser = createAsyncThunk('login/user', async ({ email, password
     try {
         const response = await axios.post(`https://stackbuild.onrender.com/api/auth/login/`, { email, password });
         return response.data;
-    } catch (error) {
+    } catch (error) 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    {
         if (error.response && error.response.status === 401) {
             localStorage.removeItem('token');
         }

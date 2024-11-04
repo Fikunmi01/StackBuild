@@ -11,7 +11,16 @@ export const updateProfilePicture = createAsyncThunk(
   "user/updateProfilePicture",
   async ({ pictureFormData }, { rejectWithValue }) => {
     const userId = localStorage.getItem("userId");
-    console.log(userId, "userId pictur");
+
+    // Check if userId is a valid MongoDB ObjectId
+    const isValidObjectId = (id) => /^[0-9a-fA-F]{24}$/.test(id);
+    if (!isValidObjectId(userId)) {
+      return rejectWithValue("Invalid userId format");
+    }
+
+    console.log(userId, "userId picture");
+    console.log(pictureFormData, "picture uploaded");
+
     try {
       const response = await axios.post(
         `https://stackbuild.onrender.com/api/user/${userId}/picture`,
@@ -24,7 +33,8 @@ export const updateProfilePicture = createAsyncThunk(
       );
       return response.data; // Assuming the API returns the updated user data
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      console.error("Error uploading picture:", error.response ? error.response.data : error.message);
+      return rejectWithValue(error.response ? error.response.data : error.message);
     }
   }
 );

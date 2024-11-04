@@ -32,7 +32,9 @@ export const Profile = () => {
   useEffect(() => {
     if (saveRequested) {
       if (imageEdited) {
-        dispatch(updateProfilePicture({ imgSrc: editedImgSrc }))
+        const formData = new FormData();
+        formData.append("picture", editedImgSrc);
+        dispatch(updateProfilePicture({ pictureFormData: formData }))
           .unwrap()
           .then((res) => {
             if (res && res.status === "success") {
@@ -45,16 +47,22 @@ export const Profile = () => {
             console.error("Image Update failed:", error);
           })
           .finally(() => {
-            // setSaveRequested(false);
+            setSaveRequested(false);
             setEditMode(false);
           });
-      } else if (firstNameEdited || lastNameEdited || emailEdited || usernameEdited) {
+      } else if (
+        firstNameEdited ||
+        lastNameEdited ||
+        emailEdited ||
+        usernameEdited
+      ) {
         dispatch(
           updateUser({
             ...(firstNameEdited && { firstName: editedFirstName }),
             ...(lastNameEdited && { lastName: editedLastName }),
             ...(emailEdited && { email: editedEmail }),
-            ...(usernameEdited && { username: editedUsername }), // Fixed key from 'email' to 'username'
+            ...(usernameEdited && { username: editedUsername }),
+            ...(imageEdited && { profilePicture: editedImgSrc }),
           })
         )
           .unwrap()
@@ -107,6 +115,10 @@ export const Profile = () => {
         setEditedUsername(value);
         setUsernameEdited(true);
         break;
+      case "profilePicture":
+        setEditedImgSrc(value);
+        setImageEdited(true);
+        break;
       default:
         break;
     }
@@ -140,18 +152,18 @@ export const Profile = () => {
       <div className="p-4">
         <h1 className="text-4xl font-serif mb-10">Profile</h1>
 
-        <div className="flex gap-10">
-          <div>
-            <div className="relative">
+        <div className="flex flex-col-reverse md:flex-row md:gap-10">
+          <div className="">
+            <div className="relative ">
               <img
-                src={editedImgSrc || "assets/uploadIcon.png"} // Replace 'path/to/default/image.jpg' with the path to a default image
-                alt="Profile"
-                className="w-96 h-96 object-cover" // Adjust width (w-96) and height (h-96) as needed
+                src={editedImgSrc || "/assets/profile.svg"}
+                alt="Profile Icon"
+                className="w-96 md:h-96 object-cover"
               />
               {editMode && (
                 <input
                   type="file"
-                  className="mt-4   " // Position the file input as needed
+                  className="mt-4   "
                   onChange={handleImageChange}
                   alt=""
                 />
@@ -176,7 +188,7 @@ export const Profile = () => {
           </div>
 
           <div>
-            <div className="flex">
+            <div className="flex md:flex-row">
               <span className="flex w-96 flex-col">
                 <label
                   htmlFor="firstname"
@@ -220,7 +232,7 @@ export const Profile = () => {
               </span>
             </div>
 
-            <div className="flex mt-10">
+            <div className="flex flex-col md:flex-row md:mt-10">
               <span className="flex w-96 flex-col">
                 <label
                   htmlFor="email"
@@ -257,7 +269,7 @@ export const Profile = () => {
               </span>
             </div>
 
-            <div className="flex mt-10">
+            <div className="flex md:mt-10">
               <span className="flex w-96 flex-col">
                 <label
                   htmlFor="username"
