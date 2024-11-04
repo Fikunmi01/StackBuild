@@ -1,94 +1,94 @@
 const { body, validationResult } = require("express-validator");
-const PostModel = require("../../model/post.model");
-const validator = require("validator");
 
-const newComment = [
-  // Validate and sanitize the text field.
-  body("text")
-    .trim() // Remove leading/trailing whitespace
-    .isLength({ min: 1 })
-    .withMessage("Text must be specified.")
-    .escape(),
+const Post = require("../../model/post.model");
+const Comment = require("../../model/comment.model");
 
-  async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      // There are errors. Render the form again with sanitized values/error messages.
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    try {
-      const { text } = req.body;
-      const postId = req.params.postId;
-      const username = req.user.username;
-
-      // Find the post by its postId
-      const post = await PostModel.findOne({ postId: postId });
-
-      if (!post) {
-        return res.status(404).json({ error: "No comments found" });
-      }
-
-      // Add the new comment to the post's comments array
-      post.comments.push({ text, username });
-
-      // Save the updated post document
-      await post.save();
-
-      res.status(201).json(post);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Internal server error" });
-    }
-  },
-];
-
-const quoteComment = async (req, res, next) => {
+// Create a new comment
+const newComment = async (req, res) => {
   try {
-    console.log(req.body); // Log the request body
+    const { text } = req.body;
     const { postId } = req.params;
-    const { commentId, quote } = req.body;
-    const post = await PostModel.findOne({ postId });
+    const author = req.user._id;
+
+    const post = await Post.findById(postId);
     if (!post) {
-      console.log(`Post with ID ${postId} not found`); // Log if post not found
+      return res.status(404).json({ error: "Post not found" });
     }
-    const comment = post.comments.id(commentId);
-    if (!comment) {
-      console.log(`Comment with ID ${commentId} not found`); // Log if comment not found
-    }
-    comment.quotes.push({ quote, username: req.user.username });
-    await post.save();
-    console.log("Comment quoted");
-    res.json({ comment, username: req.user.username });
-  } catch (err) {
-    console.log(err); // Log any errors
-    res.status(500).json({ error: err.message });
+
+    const newComment = new Comment({
+      postId,
+      text,
+      author,
+    });
+
+    await newComment.save();
+
+    res.status(201).json({
+      message: "Comment added successfully",
+      comment: newComment,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
-const likeComment = async (req, res, next) => {
+
+// Quote a comment
+const quoteComment = async (req, res) => {
   try {
-    const { postId } = req.params;
-    const { commentId } = req.body;
-    const post = await PostModel.findOne({ postId });
-    const comment = post.comments.id(commentId);
-    const userIndex = comment.likes.indexOf(req.user._id);
-    if (userIndex === -1) {
-      // User has not liked the comment yet, so add their ID to the likes array
-      comment.likes.push(req.user._id);
-    } else {
-      // User has already liked the comment, so remove their ID from the likes array
-      comment.likes.splice(userIndex, 1);
+    const { postId, commentId } = req.params;
+    const { quote } = req.body;
+    const author = req.user._id;
+
+    const comment = await Comment.findOne({ _id: commentId, postId: postId });
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
     }
-    await post.save();
-    console.log("Comment liked/unliked");
+
+    comment.quotes.push({ quote, author });
+    await comment.save();
+
     res.json({
+      message: "Comment quoted successfully",
       comment,
-      likes: comment.likes,
-      username: req.user.username,
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Like or unlike a comment
+const likeComment = async (req, res) => {
+  try {
+    const { commentId } = req.params;
+    const userId = req.user._id;
+
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    const userLikeIndex = comment.likes.indexOf(userId);
+    if (userLikeIndex === -1) {
+      // User hasn't liked the comment, so add the like
+      comment.likes.push(userId);
+    } else {
+      // User has already liked the comment, so remove the like
+      comment.likes.splice(userLikeIndex, 1);
+    }
+
+    await comment.save();
+
+    res.json({
+      message: "Comment like updated successfully",
+      likes: comment.likes.length,
+      comment,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 

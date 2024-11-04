@@ -13,6 +13,8 @@ const {
   getPosts,
   getSinglePost,
   searchPost,
+  likePost,
+  dislikePost
 } = require("./posts");
 
 const { createUser, loginUser } = require("../user/auth");
@@ -34,4 +36,6 @@ module.exports = {
   newComment,
   likeComment,
   quoteComment,
+  likePost,
+  dislikePost
 };
