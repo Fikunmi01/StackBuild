@@ -10,15 +10,23 @@ const createUser = async (req, res, next) => {
   try {
     const { email, password, firstName, lastName, username } = req.body;
 
-    const response = await UserModel.findOne({ email: email });
+    const existingUser = await UserModel.findOne({
+      $or: [
+        { email: email },
+        { username: username }
+      ]
+    });
 
-    if (response) {
-      throw new Error("User already exists");
+    if (existingUser) {
+      return errorResponse(
+        res,
+        existingUser.email === email ? "Email already in use" : "Username already taken",
+        400
+      );
     }
 
     const hashedPassword = await hashPassword(password);
-
-    const token = verificationToken(6);
+    const verificationCode = verificationToken(6);
 
     const user = await UserModel.create({
       email,
@@ -26,59 +34,70 @@ const createUser = async (req, res, next) => {
       firstName,
       lastName,
       username,
-      verificationToken: token,
+      verificationToken: verificationCode,
     });
 
-    const tokenValue = generateToken({
-      id: user._id,
+    const token = generateToken({
+      id: user._id,            // Changed from user.id to user._id
       username: user.username,
     });
 
-    const { new_password, ...rest } = user.toJSON();
+    // Remove sensitive data before sending response
+    const userResponse = user.toJSON();
+    delete userResponse.password;
+    delete userResponse.verificationToken;
 
     return successResponse(
       res,
-      { user: rest, token: tokenValue },
+      {
+        user: userResponse,
+        token
+      },
       "User created successfully"
     );
   } catch (err) {
-    console.log("Error during creating account", err);
-    return errorResponse(res, "Internal server error", 500);
+    console.error("Error during account creation:", err);
+    return errorResponse(res, err.message || "Internal server error", err.status || 500);
   }
 };
 
-const loginUser = async (req, res, next) => {
-  const { email, password } = req.body;
-
+const loginUser = async (req, res) => {
   try {
-    // Debug: Check email and password from request body
-    console.log("Login attempt with email:", email);
+    const { email, password } = req.body;
 
-    // Find user by email
-    const user = await UserModel.findOne({ email: email });
+    const user = await UserModel.findOne({ email })
+      .select('+password');  // In case password field is set to select: false
 
     if (!user) {
-      console.log("User not found with email:", email);
-      return errorResponse(res, "Invalid email or password", 400);
+      return errorResponse(res, "Invalid credentials", 401);
     }
 
-    // Debug: User found, check password comparison
-    const isMatch = await comparePassword(password, user.password);
-    if (!isMatch) {
-      console.log("Incorrect password for email:", email);
-      return errorResponse(res, "Incorrect password", 400);
+    const isPasswordValid = await comparePassword(password, user.password);
+
+    if (!isPasswordValid) {
+      return errorResponse(res, "Invalid credentials", 401);
     }
 
-    // Debug: Password match, generating token
     const token = generateToken({
-      id: user._id,
+      id: user._id,            // Changed from user.id to user._id
       username: user.username,
     });
 
-    console.log("User logged in successfully with email:", email);
-    return successResponse(res, { user, token }, "User logged in successfully");
+    // Remove sensitive data before sending response
+    const userResponse = user.toJSON();
+    delete userResponse.password;
+    delete userResponse.verificationToken;
+
+    return successResponse(
+      res,
+      {
+        user: userResponse,
+        token
+      },
+      "Login successful"
+    );
   } catch (err) {
-    console.log("Error during login:", err);
+    console.error("Error during login:", err);
     return errorResponse(res, "Internal server error", 500);
   }
 };
