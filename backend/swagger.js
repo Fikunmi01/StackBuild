@@ -10,9 +10,13 @@ const options = {
     },
     servers: [
       {
-        url:
-          "https://stackbuild.onrender.com/api",
+        url: "https://stackbuild.onrender.com/api",
+        description: "Production server"
       },
+      {
+        url: "http://localhost:5000/api",
+        description: "Localhost server"
+      }
     ],
   },
   apis: [

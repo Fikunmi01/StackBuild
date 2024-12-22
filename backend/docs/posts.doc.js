@@ -188,3 +188,57 @@
  *       '500':
  *         description: Server error
  */
+
+/**
+ * @swagger
+ * /posts/{postId}/like:
+ *   put:
+ *     summary: Like a post by ID
+ *     tags: [Posts]
+ *     parameters:
+ *       - in: path
+ *         name: postId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Post liked successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
+ *       '404':
+ *         description: Post not found
+ *       '500':
+ *         description: Server error
+ */
+
+/**
+ * @swagger
+ * /posts/{postId}/dislike:
+ *   put:
+ *     summary: Dislike a post by ID
+ *     tags: [Posts]
+ *     parameters:
+ *       - in: path
+ *         name: postId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Post disliked successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
+ *       '404':
+ *         description: Post not found
+ *       '500':
+ *         description: Server error
+ */

@@ -104,7 +104,7 @@ const getSinglePost = async (req, res, next) => {
         ]
       });
     } else {
-      post = await PostModel.findById(postId).populate('likes', "firstname, lastname");
+      post = await PostModel.findById(postId).populate('author likes', 'username firstName lastName').lean();
     }
 
     if (!post) {
@@ -137,7 +137,7 @@ const getPosts = async (req, res, next) => {
       };
     }
 
-    const posts = await PostModel.find(filter);
+    const posts = await PostModel.find(filter).populate('author likes', 'username firstName lastName').lean();
     res.status(200).json(posts);
   } catch (error) {
     console.error(error);
@@ -222,8 +222,10 @@ const deletePost = async (req, res, next) => {
 };
 
 const likePost = async (req, res) => {
-  const postId = req.params.postId.toString();
+  const { postId } = req.params;
   const userId = req.user._id;
+
+  console.log('Like post:', postId, userId);
 
   try {
     // First find the post

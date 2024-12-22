@@ -21,6 +21,7 @@ const specs = require("./swagger");
 
 const app = express();
 
+// Swagger UI
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // view engine setup
